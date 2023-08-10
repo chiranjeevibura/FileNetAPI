@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Function to check if Java process is running
+is_java_running() {
+  pgrep -f java > /dev/null
+}
+
+# Main loop
+while true; do
+  if is_java_running; then
+    echo "Java process is running. Waiting for 30 seconds..."
+    sleep 30
+  else
+    echo "No Java process found. Running the main script..."
+    # Replace 'your_main_script.sh' with the name of your main shell script
+    sh your_main_script.sh
+  fi
+done
