@@ -1,0 +1,10 @@
+String RecordTriggerDate = "N/A"; // Default value
+
+if (properties.get("RECORD_TRIGGER_DATE") != null) {
+    if (properties.get("RECORD_TRIGGER_DATE").get_Type().equals(PropertyType.DATETIME)) {
+        Date triggerDate = properties.get("RECORD_TRIGGER_DATE").getDateTimeValue();
+        RecordTriggerDate = triggerDate != null ? formatDate(triggerDate) : "N/A";
+    } else if (properties.get("RECORD_TRIGGER_DATE").get_Type().equals(PropertyType.STRING)) {
+        RecordTriggerDate = properties.get("RECORD_TRIGGER_DATE").getStringValue();
+    }
+}
