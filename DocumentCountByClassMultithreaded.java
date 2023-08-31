@@ -75,11 +75,23 @@ public class DocumentCountByClassMultithreaded {
             int pageSize = 1000;
             int totalDocumentCount = 0;
 
-            RepositoryRowSet rowSet;
+            /*RepositoryRowSet rowSet;
             do {
                 rowSet = searchScope.fetchRows(searchSQL, pageSize, null, Boolean.TRUE);
                 totalDocumentCount += rowSet.size();
-            } while (rowSet.hasNextPage());
+            } while (rowSet.hasNextPage()); */
+
+            RepositoryRowSet rowSet = searchScope.fetchRows(searchSQL, pageSize, null, Boolean.TRUE);
+
+           for (RepositoryRow row : rowSet) {
+            totalDocumentCount++;
+            }
+
+           while (rowSet.nextPage()) {
+           for (RepositoryRow row : rowSet) {
+           totalDocumentCount++;
+            }
+            }
 
             synchronized (csvWriter) {
                 csvWriter.append(objectStore.get_Domain().get_Name()).append(",");
