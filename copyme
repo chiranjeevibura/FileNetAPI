@@ -8,3 +8,26 @@ if (properties.get("RECORD_TRIGGER_DATE") != null) {
         RecordTriggerDate = properties.get("RECORD_TRIGGER_DATE").getStringValue();
     }
 }
+
+
+In the United States, the timezones are defined using the "America" prefix followed by the city or region name. Here are some common timezone IDs for different regions in the USA:
+
+1. **Eastern Time Zone (ET)**:
+   - `America/New_York`
+
+2. **Central Time Zone (CT)**:
+   - `America/Chicago`
+
+3. **Mountain Time Zone (MT)**:
+   - `America/Denver`
+
+4. **Pacific Time Zone (PT)**:
+   - `America/Los_Angeles`
+
+5. **Alaska Time Zone (AKT)**:
+   - `America/Anchorage`
+
+6. **Hawaii Time Zone (HT)**:
+   - `Pacific/Honolulu`
+
+These are just a few examples of timezone IDs for various regions within the United States. When using `TimeZone.getTimeZone("Your_Desired_Timezone")`, you can replace `"Your_Desired_Timezone"` with any of the above timezone IDs based on the specific region you want to use.
