@@ -31,3 +31,7 @@ In the United States, the timezones are defined using the "America" prefix follo
    - `Pacific/Honolulu`
 
 These are just a few examples of timezone IDs for various regions within the United States. When using `TimeZone.getTimeZone("Your_Desired_Timezone")`, you can replace `"Your_Desired_Timezone"` with any of the above timezone IDs based on the specific region you want to use.
+
+I hope you're well. Just a quick check-in: Did you get a chance to use the provided account numbers for testing purposes? We're eager to gather any feedback you might have. Your insights will be instrumental in moving us closer to our requirements analysis phase. Your input is highly appreciated and will aid us in refining our approach.
+
+Looking forward to hearing from you soon.
