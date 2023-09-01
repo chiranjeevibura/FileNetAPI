@@ -1,0 +1,120 @@
+import com.filenet.api.core.*;
+import com.filenet.api.query.*;
+import com.filenet.api.util.UserContext;
+import com.filenet.api.admin.ClassDefinition;
+
+import java.io.FileWriter;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import javax.security.auth.Subject;
+
+public class DocumentCountByClassMultithreaded {
+
+    public static void main(String[] args) {
+        String uri = "https://ui.abc.cloud/wsi/FNCEWS40MTOM/";
+        String username = "admin";
+        String password = "xfsdfasdf";
+        List<String> classNames = new ArrayList<>();
+        classNames.add("P8_Test");
+        // classNames.add("Class2");
+        // Add more class names as needed
+
+        String csvFilePath = "C:\\Work\\document_count_per_class.csv";
+
+        Connection connection = Factory.Connection.getConnection(uri);
+        Subject subject = UserContext.createSubject(connection, username, password, null);
+        UserContext.get().pushSubject(subject);
+
+        try {
+            Domain domain = Factory.Domain.fetchInstance(connection, null, null);
+            List<ObjectStore> objectStores = fetchAllObjectStores(domain);
+
+            FileWriter csvWriter = new FileWriter(csvFilePath);
+            csvWriter.append("Domain,ObjectStore,Class,Count\n");
+
+            ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+            for (ObjectStore objectStore : objectStores) {
+                for (String className : classNames) {
+                    executor.submit(() -> processClass(className, objectStore, csvWriter));
+                }
+            }
+
+            executor.shutdown();
+            executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+
+            csvWriter.flush();
+            csvWriter.close();
+
+            System.out.println("Document count per class export completed successfully.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            UserContext.get().popSubject();
+        }
+    }
+
+    private static List<ObjectStore> fetchAllObjectStores(Domain domain) {
+        List<ObjectStore> objectStores = new ArrayList<>();
+        try {
+            @SuppressWarnings("unchecked")
+            ObjectStoreSet osSet = domain.get_ObjectStores();
+            Iterator<ObjectStore> osIter = osSet.iterator();
+            while (osIter.hasNext()) {
+                objectStores.add(osIter.next());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return objectStores;
+    }
+
+    private static void processClass(String className, ObjectStore objectStore, FileWriter csvWriter) {
+        try {
+            ClassDefinition classDef = Factory.ClassDefinition.fetchInstance(objectStore, className, null);
+
+            // Define the date in the format "yyyyMMdd"
+            String startDateStr = "20230701";
+
+            // Parse the start date string to a Date object
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            Date startDate = sdf.parse(startDateStr);
+
+            // Format the date to the Filenet date format "yyyyMMdd'T'HHmmss'Z'"
+            String formattedStartDate = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'").format(startDate);
+
+            // Create the SQL query to get documents where RecordTriggerDate is null and creation date is greater than or equal to the specified date
+            String query = "SELECT [This] FROM " + className + " WHERE [Fast2Import] IS NULL AND [DateCreated] >= " + formattedStartDate;
+
+            // Create the SearchSQL object
+            SearchSQL searchSQL = new SearchSQL(query);
+
+            // Create the SearchScope object
+            SearchScope searchScope = new SearchScope(objectStore);
+
+            int pageSize = 1000;
+            int totalDocumentCount = 0;
+
+            RepositoryRowSet rowSet = searchScope.fetchRows(searchSQL, pageSize, null, Boolean.TRUE);;
+            Iterator<?> it = rowSet.iterator();
+            while (it.hasNext()) {
+                totalDocumentCount++;
+            }
+
+            synchronized (csvWriter) {
+                csvWriter.append(objectStore.get_Domain().get_Name()).append(",");
+                csvWriter.append(objectStore.get_DisplayName()).append(",");
+                csvWriter.append(className).append(",");
+                csvWriter.append(String.valueOf(totalDocumentCount)).append("\n");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
