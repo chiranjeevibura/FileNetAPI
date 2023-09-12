@@ -1,0 +1,5 @@
+SELECT COUNT(*) AS doccount, YEAR(dv.create_date) AS createdyear
+FROM docversion dv
+JOIN classdefinition cd ON dv.object_class_id = cd.object_id
+WHERE cd.symbolic_name = 'abc' AND dv.recordtriggerdate IS NULL
+GROUP BY createdyear;
