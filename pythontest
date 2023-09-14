@@ -30,3 +30,24 @@ count_of_loan_numbers_only_in_a = len(loan_numbers_only_in_a)
 
 # Print the result
 print(f"Count of loan numbers that exist in database A but not in database B: {count_of_loan_numbers_only_in_a}")
+
+
+-------------------------
+
+# Sample loan numbers from database A and database B
+database_a_loan_numbers = [123, 456, 789, 101]
+database_b_loan_numbers = [456, 789, 111, 222]
+
+# Convert the lists into sets
+set_a = set(database_a_loan_numbers)
+set_b = set(database_b_loan_numbers)
+
+# Find loan numbers that exist in database A but not in database B
+loan_numbers_only_in_a = set_a - set_b
+
+# Count the loan numbers
+count_of_loan_numbers_only_in_a = len(loan_numbers_only_in_a)
+
+# Print the result
+print(f"Count of loan numbers that exist in database A but not in database B: {count_of_loan_numbers_only_in_a}")
+
