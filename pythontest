@@ -1,0 +1,32 @@
+import sqlite3
+
+# Connect to database A
+conn_a = sqlite3.connect('database_a.db')
+cursor_a = conn_a.cursor()
+
+# Execute SQL query to retrieve loan numbers from database A
+cursor_a.execute('SELECT loan_number FROM loans')
+loan_numbers_a = set(row[0] for row in cursor_a.fetchall())
+
+# Close the connection to database A
+conn_a.close()
+
+# Connect to database B
+conn_b = sqlite3.connect('database_b.db')
+cursor_b = conn_b.cursor()
+
+# Execute SQL query to retrieve loan numbers from database B
+cursor_b.execute('SELECT loan_number FROM loans')
+loan_numbers_b = set(row[0] for row in cursor_b.fetchall())
+
+# Close the connection to database B
+conn_b.close()
+
+# Find loan numbers that exist in database A but not in database B
+loan_numbers_only_in_a = loan_numbers_a - loan_numbers_b
+
+# Count the loan numbers
+count_of_loan_numbers_only_in_a = len(loan_numbers_only_in_a)
+
+# Print the result
+print(f"Count of loan numbers that exist in database A but not in database B: {count_of_loan_numbers_only_in_a}")
