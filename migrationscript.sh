@@ -76,3 +76,32 @@ while true; do
   check_input_folders
   sleep 600  # Check every 10 minutes (adjust as needed)
 done
+
+
+************************************
+
+# Function to process a batch folder
+process_batch_folder() {
+  local batch_folder="$1"
+
+  # Extract the relevant parts from the batch folder name
+  batch_folder_name=$(basename "$batch_folder")
+  folder_parts=($(echo "$batch_folder_name" | tr '_' ' ')) # Split by underscore
+
+  # Ensure that the folder name has enough parts to construct the manifest file name
+  if [ "${#folder_parts[@]}" -ge 4 ]; then
+    date_part="${folder_parts[2]}"
+    time_part="${folder_parts[3]}"
+
+    # Construct the manifest file name
+    manifest_file_name="${folder_parts[0]}_${folder_parts[1]}_History_${date_part}_${time_part}.txt"
+
+    # Combine the batch folder path and the manifest file name
+    manifest_file="$batch_folder/$manifest_file_name"
+
+    # ... Rest of your script ...
+  else
+    echo "Invalid folder name: $batch_folder_name"
+  fi
+}
+
