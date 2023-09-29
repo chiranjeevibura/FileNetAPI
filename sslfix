@@ -1,0 +1,15 @@
+SSLContext sslContext = SSLContexts.custom()
+    .loadTrustMaterial(new TrustSelfSignedStrategy())
+    .build();
+
+SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(
+    sslContext,
+    NoopHostnameVerifier.INSTANCE // Allow all hostnames
+);
+
+CloseableHttpClient httpClient = HttpClients.custom()
+    .setSSLSocketFactory(sslSocketFactory)
+    .build();
+
+HttpGet request = new HttpGet(url);
+// Set headers and execute the request as before
