@@ -92,3 +92,24 @@ public class HitachiNameSpaceStatistics {
         return hrsize;
     }
 }
+
+
+********
+        // Create a custom SSLContext to disable hostname verification
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, new TrustManager[]{new X509TrustManager() {
+            public X509Certificate[] getAcceptedIssuers() {
+                return null;
+            }
+
+            public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            }
+
+            public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            }
+        }}, null);
+
+        // Use the custom SSLContext when creating the HttpClient
+        CloseableHttpClient client = HttpClients.custom()
+                .setSSLContext(sslContext)
+                .build();
