@@ -1,0 +1,17 @@
+To remediate SHA-1 vulnerability and enhance the security of your Java configuration, you can modify the `jdk.tls.disabledAlgorithms` property to disable cipher suites that use SHA-1. Additionally, you should also ensure that you are using a more secure Java version, as older versions may have vulnerabilities that are not fixed by simply updating cipher suite configurations.
+
+Here's an updated `jdk.tls.disabledAlgorithms` property that removes SHA-1-based cipher suites from your list:
+
+```plaintext
+jdk.tls.disabledAlgorithms=SSLv3, TLSv1, TLSv1.1, RC4, DES, MD5withRSA, DH KeySize < 1024, EC KeySize < 1024, 3DES_EDE_CBC, anon, NULL, SHA1, SHA1withRSA, SHA1withDSA
+```
+
+In the updated configuration, we've added the following:
+
+- `SHA1`: Disables SHA-1-based cipher suites.
+- `SHA1withRSA`: Disables the use of SHA-1 for RSA signatures.
+- `SHA1withDSA`: Disables the use of SHA-1 for DSA signatures.
+
+Please note that SHA-1 is considered weak and deprecated for security reasons. If your Java version is old, it's recommended to update to a more recent version to benefit from the latest security improvements. Additionally, consider checking if there are specific application-level changes required to ensure full SHA-1 remediation.
+
+Remember to test the changes in a controlled environment before applying them to a production system to ensure that they do not have any unintended consequences on your applications.
