@@ -1,26 +1,31 @@
 #!/bin/bash
 
-# Initialize a variable to store merged lines
+# Input and output file names
+input_file="input.txt"
+output_file="output.txt"
+
+# Variable to store merged lines
 merged_line=""
 
-# Read the input file line by line
+# Read input file line by line
 while IFS= read -r line; do
-    # Check if the line does not start with '|'
-    if [[ ! $line =~ ^\| ]]; then
-        # Merge the line with the previous line
-        merged_line+="$line "
-    else
-        # If the line starts with '|', print the merged line (if any)
-        # and then the current line
-        if [ -n "$merged_line" ]; then
-            echo "$merged_line"
-            merged_line=""
+    # Check if the line starts with "|"
+    if [[ $line == "|"* ]]; then
+        # If merged_line is not empty, append it to the output file
+        if [[ ! -z $merged_line ]]; then
+            echo "$merged_line" >> "$output_file"
         fi
-        echo "$line"
+        # Set merged_line to the current line
+        merged_line="$line"
+    else
+        # If the line does not start with "|", merge it with the previous line
+        merged_line="$merged_line$line"
     fi
-done < input.txt  # Replace 'input.txt' with your file name
+done < "$input_file"
 
-# Print the last merged line (if any)
-if [ -n "$merged_line" ]; then
-    echo "$merged_line"
+# Append the last merged line to the output file
+if [[ ! -z $merged_line ]]; then
+    echo "$merged_line" >> "$output_file"
 fi
+
+echo "Merged lines starting with '|' have been saved to $output_file."
