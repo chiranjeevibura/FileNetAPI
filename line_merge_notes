@@ -1,0 +1,213 @@
+#!/bin/bash
+
+# Input and output file names
+input_file="input.txt"
+output_file="output.txt"
+processed_folder="processed"
+output_folder="output"
+error_file="$output_file.error"
+backup_folder="backup"
+java_process_command="java -jar YourMigrationTool.jar"  # Update this with the correct Java process command
+log_file="script_log.log"
+
+# Function to log messages to the log file
+log() {
+    local timestamp
+    timestamp=$(date "+%Y-%m-%d %H:%M:%S")
+    echo "[$timestamp] $1" >> "$log_file"
+}
+
+# Function to handle errors and exit the script
+handle_error() {
+    local error_message="$1"
+    log "Error: $error_message"
+    exit 1
+}
+
+# Ensure the input file exists and is readable
+if [ ! -f "$input_file" ] || [ ! -r "$input_file" ]; then
+    handle_error "Input file '$input_file' not found or not readable."
+fi
+
+# Backup the original input file
+mkdir -p "$backup_folder"
+cp "$input_file" "$backup_folder/$input_file_$(date +%Y%m%d%H%M%S)"
+
+# Validate input file format and create output file
+# ... (same as before)
+
+# Validate PDF names and counts
+# ... (same as before)
+
+# Check existence and permissions of files before operations
+if [ ! -f "$input_file" ] || [ ! -f "$output_file" ]; then
+    handle_error "Input or output file missing."
+fi
+
+# Execute Java process with a timeout of 5 minutes
+timeout 5m $java_process_command "$input_file" "$output_file" > "$error_file" 2>&1
+java_exit_status=$?
+
+# Check the exit status of the Java process
+if [ $java_exit_status -ne 0 ]; then
+    handle_error "Java process failed with exit status $java_exit_status. Check $error_file for details."
+fi
+
+# Check for errors in the Java process output
+if [ -s "$error_file" ]; then
+    handle_error "Java process completed, but error file is not empty. Check $error_file for details."
+fi
+
+# Move files only if all previous steps were successful
+log "Java process completed successfully. Moving files..."
+mkdir -p "$processed_folder"
+find . -maxdepth 1 -type f \( -name "*.pdf" -o -name "*.csv" \) -exec mv {} "$processed_folder" \;
+mkdir -p "$output_folder"
+mv "$output_file.success" "$output_folder/"
+mv "$error_file" "$output_folder/"
+
+# Log success message
+log "Files moved successfully."
+
+# Script execution completed successfully
+log "Script execution completed successfully."
+
+# End of script
+
+
+
+------------
+
+#!/bin/bash
+
+# Ensure the input file exists and is readable
+if [ ! -f "$input_file" ] || [ ! -r "$input_file" ]; then
+    echo "Error: Input file '$input_file' not found or not readable."
+    exit 1
+fi
+
+# Step 1-4: Validate input, process data, create output file
+# ... (same as original script)
+
+# Step 5-8: Validate PDF names, compare counts, and execute Java process
+# ... (same as original script)
+
+# Step 9-11: Validate Java process, move files, and perform error handling
+if [ $? -eq 0 ]; then
+    # Check Java process success
+    # ... (same as original script)
+else
+    echo "Error: Java process encountered an issue. Aborting further processing."
+    exit 1
+fi
+
+# Additional robustness checks
+if [ $? -eq 0 ]; then
+    # Additional checks and operations after Java process
+    # ...
+else
+    echo "Error: An issue occurred. Aborting further processing."
+    exit 1
+fi
+
+echo "Script execution completed successfully."
+
+# End of script
+_____
+
+
+#!/bin/bash
+
+# Input and output file names
+input_file="input.txt"
+output_file="output.txt"
+processed_folder="processed"
+output_folder="output"
+error_file="$output_file.error"
+
+# Step 1: Count the number of rows in the input file excluding the header
+total_rows=$(($(grep -c "|" "$input_file") - 1))
+
+# Step 2: Count the number of rows starting with "|"
+matching_rows=$(grep -c "^|" "$input_file")
+
+# Step 3: Validate if the counts match, assign input_file to output_file and proceed further
+if [ "$total_rows" -eq "$matching_rows" ]; then
+    echo "Number of rows in the input file matches the number of rows starting with '|'."
+    cp "$input_file" "$output_file"
+else
+    echo "Number of rows in the input file does not match the number of rows starting with '|'. Exiting."
+    exit 1
+fi
+
+# Variable to store merged lines
+merged_line=""
+
+# Step 4: Read input file line by line and apply merge logic to create output_file
+while IFS= read -r line; do
+    if [[ $line == "|"* ]]; then
+        if [[ ! -z $merged_line ]]; then
+            echo "$merged_line" >> "$output_file"
+        fi
+        merged_line="$line"
+    else
+        merged_line="$merged_line$line"
+    fi
+done < "$input_file"
+
+if [[ ! -z $merged_line ]]; then
+    echo "$merged_line" >> "$output_file"
+fi
+
+# Step 5-8: Read the output file, extract column values, count total and unique PDF names
+pdf_names=$(awk -F'|' 'NR > 1 {print $3}' "$output_file")
+total_pdf=$(echo "$pdf_names" | wc -w)
+unique_pdf=$(echo "$pdf_names" | tr ' ' '\n' | sort -u | wc -l)
+
+# Step 9: Count the number of PDF files in the input directory (excluding subdirectories)
+input_pdf_count=$(find . -maxdepth 1 -type f -name "*.pdf" | wc -l)
+
+# Step 10: Compare input PDF count with unique PDF count and proceed if they match
+if [ "$input_pdf_count" -eq "$unique_pdf" ]; then
+    echo "Total PDF names: $total_pdf"
+    echo "Unique PDF names: $unique_pdf"
+    echo "Number of PDF files in the input directory matches the unique PDF names count."
+
+    # Step 11: Validate error file and proceed accordingly
+    java -jar YourMigrationTool.jar "$input_file" "$output_file" &  # Run Java process in the background
+    java_process_pid=$!  # Get the process ID of the Java process
+
+    # Monitor and wait for the Java process to complete
+    wait "$java_process_pid"
+
+    # Check if the Java process completed successfully
+    if [ $? -eq 0 ]; then
+        echo "Java process completed successfully."
+        
+        # Check the count of rows in the output error file (excluding header)
+        error_count=$(($(tail -n +2 "$output_file.error" | wc -l)))
+        
+        if [ "$error_count" -eq 0 ]; then
+            echo "Error file is empty. Proceeding to move PDF and CSV files."
+            mkdir -p "$processed_folder"
+            # Move PDF and CSV files to processed folder
+            find . -maxdepth 1 -type f \( -name "*.pdf" -o -name "*.csv" \) -exec mv {} "$processed_folder" \;
+            echo "PDF and CSV files moved to $processed_folder."
+            # Move success and error files to the output folder
+            mkdir -p "$output_folder"
+            mv "$output_file.success" "$output_folder/"
+            mv "$output_file.error" "$output_folder/"
+            echo "Success and error files moved to $output_folder."
+        else
+            echo "Error file is not empty. Aborting further processing."
+            exit 1
+        fi
+    else
+        echo "Java process encountered an error. Aborting further processing."
+        exit 1
+    fi
+else
+    echo "Total PDF names: $total_pdf"
+    echo "Unique PDF names: $unique_pdf"
+    echo "Number of PDF files in the input directory does not match the unique PDF names count. Difference: $(($unique_pdf - $input_pdf_count))"
+fi
