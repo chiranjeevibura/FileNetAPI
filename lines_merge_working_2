@@ -1,0 +1,45 @@
+#!/bin/bash
+
+input_file="input.txt"
+output_file="output.txt"
+
+# Variable to store merged lines
+merged_line=""
+header_processed=false
+lines_after_header=0
+
+# Function to count occurrences of a specific character in a string
+countChar() {
+    echo "$1" | awk -F"${2}" '{print NF-1}'
+}
+
+# Step: Read input file line by line and apply merge logic to create output_file
+while IFS= read -r line || [ -n "$line" ]; do
+    if ! $header_processed; then
+        echo "$line" >> "$output_file"
+        header_processed=true
+        lines_after_header=0
+        continue
+    fi
+
+    if [[ $line == "|"* ]]; then
+        # Check the number of '|' characters in the line
+        pipe_count=$(countChar "$line" '|')
+        if [[ $pipe_count -ne 4 && $lines_after_header -le 1 ]]; then
+            merged_line="${merged_line}${line}"
+            ((lines_after_header++))
+        else
+            if [[ -n $merged_line ]]; then
+                echo "$merged_line" >> "$output_file"
+            fi
+            merged_line="$line"
+            lines_after_header=0
+        fi
+    else
+        merged_line="${merged_line}${line}"
+    fi
+done < "$input_file"
+
+if [[ -n $merged_line ]]; then
+    echo "$merged_line" >> "$output_file"
+fi
