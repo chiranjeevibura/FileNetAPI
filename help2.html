@@ -1,26 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Secure Username and Password Entry</title>
+    <title>Usernames and Passwords</title>
     <script>
-        function copyToClipboard() {
-            const passwordField = document.getElementById("password");
-            passwordField.select();
+        function copyPassword(password) {
+            const tempInput = document.createElement("input");
+            document.body.appendChild(tempInput);
+            tempInput.setAttribute("value", password);
+            tempInput.select();
             document.execCommand("copy");
+            document.body.removeChild(tempInput);
             alert("Password has been copied securely to clipboard.");
+        }
+
+        function addEntry() {
+            const username = document.getElementById("newUsername").value;
+            const password = document.getElementById("newPassword").value;
+
+            if (username && password) {
+                const table = document.getElementById("userTable");
+                const newRow = table.insertRow(table.rows.length);
+
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                const cell3 = newRow.insertCell(2);
+
+                cell1.innerHTML = username;
+                cell2.innerHTML = password;
+                cell3.innerHTML = `<button onclick="copyPassword('${password}')">Copy Password</button>`;
+            } else {
+                alert("Please enter both username and password.");
+            }
+        }
+
+        function editEntry(row) {
+            const table = document.getElementById("userTable");
+            const cells = table.rows[row].cells;
+
+            const newUsername = prompt("Enter the updated username:", cells[0].innerHTML);
+            const newPassword = prompt("Enter the updated password:", cells[1].innerHTML);
+
+            if (newUsername && newPassword) {
+                cells[0].innerHTML = newUsername;
+                cells[1].innerHTML = newPassword;
+                cells[2].innerHTML = `<button onclick="copyPassword('${newPassword}')">Copy Password</button>`;
+            } else {
+                alert("Please enter both username and password.");
+            }
         }
     </script>
 </head>
 <body>
-    <h2>Enter Username and Password</h2>
-    <form>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
+    <h2>Usernames and Passwords</h2>
+    <table id="userTable" border="1">
+        <tr>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Actions</th>
+        </tr>
+        <!-- Sample existing entry -->
+        <tr>
+            <td>SampleUser</td>
+            <td>SamplePassword123</td>
+            <td><button onclick="copyPassword('SamplePassword123')">Copy Password</button></td>
+        </tr>
+    </table>
+    <br>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-
-        <button type="button" onclick="copyToClipboard()">Copy Password</button>
-    </form>
+    <h3>Add New Entry:</h3>
+    <label for="newUsername">Username:</label>
+    <input type="text" id="newUsername" required>
+    <label for="newPassword">Password:</label>
+    <input type="password" id="newPassword" required>
+    <button onclick="addEntry()">Add</button>
 </body>
 </html>
