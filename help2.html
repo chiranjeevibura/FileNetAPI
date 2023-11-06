@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secure Username and Password Entry</title>
+    <script>
+        function copyToClipboard() {
+            const passwordField = document.getElementById("password");
+            passwordField.select();
+            document.execCommand("copy");
+            alert("Password has been copied securely to clipboard.");
+        }
+    </script>
+</head>
+<body>
+    <h2>Enter Username and Password</h2>
+    <form>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <button type="button" onclick="copyToClipboard()">Copy Password</button>
+    </form>
+</body>
+</html>
