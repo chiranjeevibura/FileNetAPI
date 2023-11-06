@@ -26,7 +26,7 @@
                 const cell3 = newRow.insertCell(2);
 
                 cell1.innerHTML = username;
-                cell2.innerHTML = password;
+                cell2.innerHTML = "*".repeat(password.length); // Mask the displayed password
                 cell3.innerHTML = `<button onclick="copyPassword('${password}')">Copy Password</button>`;
             } else {
                 alert("Please enter both username and password.");
@@ -42,7 +42,7 @@
 
             if (newUsername && newPassword) {
                 cells[0].innerHTML = newUsername;
-                cells[1].innerHTML = newPassword;
+                cells[1].innerHTML = "*".repeat(newPassword.length); // Mask the displayed password
                 cells[2].innerHTML = `<button onclick="copyPassword('${newPassword}')">Copy Password</button>`;
             } else {
                 alert("Please enter both username and password.");
@@ -61,7 +61,7 @@
         <!-- Sample existing entry -->
         <tr>
             <td>SampleUser</td>
-            <td>SamplePassword123</td>
+            <td>**************</td>
             <td><button onclick="copyPassword('SamplePassword123')">Copy Password</button></td>
         </tr>
     </table>
