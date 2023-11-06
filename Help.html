@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secure Password Entry</title>
+    <script>
+        function copyPassword() {
+            // Get the password input field
+            var passwordField = document.getElementById("password");
+
+            // Select the password field's content
+            passwordField.select();
+            passwordField.setSelectionRange(0, 99999); /* For mobile devices */
+
+            // Copy the selected content
+            document.execCommand("copy");
+
+            // Deselect the field
+            passwordField.setSelectionRange(0, 0);
+
+            // Alert the user that the password has been copied
+            alert("Password has been copied securely to clipboard.");
+        }
+    </script>
+</head>
+<body>
+    <h2>Enter Username and Password</h2>
+    <form>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <button type="button" onclick="copyPassword()">Copy Password</button>
+    </form>
+</body>
+</html>
