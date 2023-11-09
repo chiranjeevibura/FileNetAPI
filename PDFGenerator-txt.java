@@ -34,7 +34,7 @@ public class PDFGenerator {
                 int randomNum = new Random().nextInt(900000000) + 100000000;
                 String exRefNum = String.valueOf(randomNum);
                 String docName = "PDF_" + (i + 1) + ".pdf";
-                String docID = "65M17M62";
+                String docID = "xxxx";
                 String date = sdf.format(new Date());
 
                 writer.write("|" + exRefNum + "|" + docName + "|" + docID + "|" + date + "\n");
