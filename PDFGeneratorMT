@@ -1,0 +1,81 @@
+import com.aspose.pdf.Document;
+import com.aspose.pdf.TextFragment;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class PDFGeneratorMT {
+
+    public static void main(String[] args) {
+        int numberOfPDFs = 1000000; // Number of PDFs to generate
+        int numberOfThreads = 10; // Number of threads for parallel processing
+        String outputDirectory = "path/to/outputDirectory"; // Output directory for PDFs and the manifest file
+
+        // Generate the manifest file
+        generateManifest(numberOfPDFs, outputDirectory);
+
+        // Generate PDF files using multithreading
+        generatePDFsMultiThread(numberOfPDFs, numberOfThreads, outputDirectory);
+    }
+
+    private static void generateManifest(int numberOfPDFs, String outputDirectory) {
+        String manifestFilePath = outputDirectory + "/manifest.txt";
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(manifestFilePath))) {
+            writer.write("Account Number|EXRefNum|Doc Name|DocID|Date\n");
+
+            for (int i = 0; i < numberOfPDFs; i++) {
+                int exRefNum = 100000000 + i;
+                String docName = "PDF_" + (i + 1) + ".pdf";
+                String docID = "65M17M62";
+                String date = sdf.format(new Date());
+
+                writer.write("|" + exRefNum + "|" + docName + "|" + docID + "|" + date + "\n");
+            }
+            System.out.println("Manifest file generated successfully at: " + manifestFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void generatePDFsMultiThread(int numberOfPDFs, int numberOfThreads, String outputDirectory) {
+        Thread[] threads = new Thread[numberOfThreads];
+        int pdfsPerThread = numberOfPDFs / numberOfThreads;
+
+        for (int i = 0; i < numberOfThreads; i++) {
+            final int start = i * pdfsPerThread + 1;
+            final int end = (i + 1) * pdfsPerThread;
+
+            threads[i] = new Thread(() -> generatePDFs(start, end, outputDirectory));
+            threads[i].start();
+        }
+
+        for (Thread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static void generatePDFs(int start, int end, String outputDirectory) {
+        try {
+            for (int i = start; i <= end; i++) {
+                Document pdfDocument = new Document();
+                TextFragment textFragment = new TextFragment("Sample PDF content.");
+                pdfDocument.getPages().add().getParagraphs().add(textFragment);
+
+                String pdfPath = outputDirectory + "/PDF_" + i + ".pdf";
+                pdfDocument.save(pdfPath);
+
+                System.out.println("PDF " + i + " generated successfully at: " + pdfPath);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
