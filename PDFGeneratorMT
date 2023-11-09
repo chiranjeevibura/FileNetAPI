@@ -30,7 +30,7 @@ public class PDFGeneratorMT {
             for (int i = 0; i < numberOfPDFs; i++) {
                 int exRefNum = 100000000 + i;
                 String docName = "PDF_" + (i + 1) + ".pdf";
-                String docID = "65M17M62";
+                String docID = "xxxx";
                 String date = sdf.format(new Date());
 
                 writer.write("|" + exRefNum + "|" + docName + "|" + docID + "|" + date + "\n");
