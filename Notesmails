@@ -1,0 +1,47 @@
+Subject: Document Migration Process Update and Validation Summary
+
+Dear [Recipient],
+
+I would like to update you on our streamlined document migration process into the P8 repository, which is now fully automated. Initially, the migration process for 20,000 documents takes approximately 2 hours, primarily to address control error file line issues. Post-resolution, the migration time is reduced to less than an hour for the same volume.
+
+Here are the key steps involved in the process:
+
+1. **Fix Control File Line Issues:**
+   Resolve any issues identified in the control file to ensure a smooth migration.
+
+2. **Metadata Validation:**
+   Conduct thorough metadata validation of the control file, checking for null values.
+
+3. **Row Count Validation:**
+   Validate the control file to ensure the actual row count aligns with the valid row count.
+
+4. **Input Folder PDF Count Validation:**
+   Verify the PDF count in the input folder to maintain accuracy throughout the migration process.
+
+5. **Summary Generation and Email Notification:**
+   Generate a comprehensive summary of the validations and share it via email.
+
+6. **Document Migration into P8:**
+   Initiate the migration process for documents into the P8 repository.
+
+7. **Post-Migration Validation:**
+   Validate error and success files following the migration to ensure data integrity.
+
+8. **Migration Summary Email:**
+   Provide a detailed summary of the migration process via email.
+
+9. **File Movement to Processed Folder:**
+   Move both data and control files to the processed folder upon successful completion.
+
+10. **Summary of Files Moved Email:**
+    Send an email summarizing the files moved to keep stakeholders informed.
+
+These enhancements in our process aim to ensure efficiency, accuracy, and transparency. If you have any questions or require further clarification, feel free to reach out.
+
+Thank you for your cooperation.
+
+Best regards,
+
+[Your Name]
+[Your Position]
+[Your Contact Information]
