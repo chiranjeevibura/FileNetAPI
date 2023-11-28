@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Usernames and Passwords</title>
+    <script>
+        function copyPassword(password) {
+            const tempInput = document.createElement("input");
+            document.body.appendChild(tempInput);
+            tempInput.setAttribute("value", password);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            alert("Password has been copied securely to clipboard.");
+        }
+
+        function addEntry() {
+            const username = document.getElementById("newUsername").value;
+            const password = document.getElementById("newPassword").value;
+
+            if (username && password) {
+                // Retrieve existing entries from localStorage
+                const existingEntries = JSON.parse(localStorage.getItem("userEntries")) || [];
+
+                // Add the new entry
+                existingEntries.push({ username, password });
+
+                // Store the updated entries back to localStorage
+                localStorage.setItem("userEntries", JSON.stringify(existingEntries));
+            } else {
+                alert("Please enter both username and password.");
+            }
+        }
+
+        function displayEntries() {
+            // Retrieve entries from localStorage
+            const entries = JSON.parse(localStorage.getItem("userEntries")) || [];
+
+            // Display entries in a textarea
+            const entriesTextArea = document.getElementById("existingEntries");
+            entriesTextArea.value = entries.map(entry => `${entry.username}:${entry.password}`).join('\n');
+        }
+    </script>
+</head>
+<body onload="displayEntries()">
+    <h2>Usernames and Passwords</h2>
+
+    <label for="existingEntries">Existing Entries:</label>
+    <textarea id="existingEntries" rows="10" cols="30" readonly></textarea>
+
+    <br>
+
+    <h3>Add New Entry:</h3>
+    <label for="newUsername">Username:</label>
+    <input type="text" id="newUsername" required>
+    <label for="newPassword">Password:</label>
+    <input type="password" id="newPassword" required>
+    <button onclick="addEntry(); displayEntries()">Add</button>
+</body>
+</html>
