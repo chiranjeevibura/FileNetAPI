@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Usernames and Passwords</title>
+    <script>
+        function copyPassword(password) {
+            const tempInput = document.createElement("input");
+            document.body.appendChild(tempInput);
+            tempInput.setAttribute("value", password);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            alert("Password has been copied securely to clipboard.");
+        }
+
+        function addEntry() {
+            const username = document.getElementById("newUsername").value;
+            const password = document.getElementById("newPassword").value;
+
+            if (username && password) {
+                // Display existing entries
+                const existingEntries = document.getElementById("existingEntries");
+                existingEntries.value += `${username}:${password}\n`;
+
+                // Clear input fields
+                document.getElementById("newUsername").value = "";
+                document.getElementById("newPassword").value = "";
+            } else {
+                alert("Please enter both username and password.");
+            }
+        }
+
+        function editEntry() {
+            const entries = document.getElementById("existingEntries").value.split('\n');
+            const usernameToEdit = prompt("Enter the username to edit:");
+
+            for (let i = 0; i < entries.length; i++) {
+                const [existingUsername, existingPassword] = entries[i].split(':');
+                if (existingUsername === usernameToEdit) {
+                    const newPassword = prompt("Enter the updated password:", existingPassword);
+                    if (newPassword) {
+                        entries[i] = `${existingUsername}:${newPassword}`;
+                        document.getElementById("existingEntries").value = entries.join('\n');
+                        alert("Password updated successfully.");
+                        return;
+                    } else {
+                        alert("Invalid password. Operation cancelled.");
+                        return;
+                    }
+                }
+            }
+
+            alert("Username not found. Please enter a valid username.");
+        }
+    </script>
+</head>
+<body>
+    <h2>Usernames and Passwords</h2>
+
+    <label for="existingEntries">Existing Entries:</label>
+    <textarea id="existingEntries" rows="10" cols="30" readonly></textarea>
+
+    <br>
+
+    <h3>Add New Entry:</h3>
+    <label for="newUsername">Username:</label>
+    <input type="text" id="newUsername" required>
+    <label for="newPassword">Password:</label>
+    <input type="password" id="newPassword" required>
+    <button onclick="addEntry()">Add</button>
+
+    <br>
+
+    <h3>Edit Password:</h3>
+    <button onclick="editEntry()">Edit Password</button>
+</body>
+</html>
