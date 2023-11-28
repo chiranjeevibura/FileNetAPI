@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Usernames and Passwords</title>
+    <script>
+        function copyPassword(password) {
+            const tempInput = document.createElement("input");
+            document.body.appendChild(tempInput);
+            tempInput.setAttribute("value", password);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            alert("Password has been copied securely to clipboard.");
+        }
+
+        function addEntry() {
+            const username = document.getElementById("newUsername").value;
+            const password = document.getElementById("newPassword").value;
+
+            if (username && password) {
+                const table = document.getElementById("userTable");
+                const newRow = table.insertRow(table.rows.length);
+
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                const cell3 = newRow.insertCell(2);
+
+                cell1.innerHTML = username;
+                cell2.innerHTML = "*".repeat(password.length); // Mask the displayed password
+                cell3.innerHTML = `<button onclick="copyPassword('${password}')">Copy Password</button>`;
+
+                // Save to local text file (for educational purposes only)
+                const entry = `${username}:${password}`;
+                saveToFile(entry);
+            } else {
+                alert("Please enter both username and password.");
+            }
+        }
+
+        function saveToFile(data) {
+            const blob = new Blob([data], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'passwords.txt';
+            a.click();
+        }
+    </script>
+</head>
+<body>
+    <h2>Usernames and Passwords</h2>
+    <table id="userTable" border="1">
+        <tr>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Actions</th>
+        </tr>
+        <!-- Sample existing entry -->
+        <tr>
+            <td>SampleUser</td>
+            <td>**************</td>
+            <td><button onclick="copyPassword('SamplePassword123')">Copy Password</button></td>
+        </tr>
+    </table>
+    <br>
+
+    <h3>Add New Entry:</h3>
+    <label for="newUsername">Username:</label>
+    <input type="text" id="newUsername" required>
+    <label for="newPassword">Password:</label>
+    <input type="password" id="newPassword" required>
+    <button onclick="addEntry()">Add</button>
+</body>
+</html>
