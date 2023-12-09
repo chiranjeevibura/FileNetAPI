@@ -25,21 +25,24 @@ public class CsvProcessor {
         String inputFilePath = "input.csv";
         String outputFilePath = "output.csv";
 
+        ExecutorService executorService = Executors.newFixedThreadPool(NUM_PRODUCER_THREADS + 1);
+
         try {
-            processCsv(inputFilePath, outputFilePath);
+            processCsv(inputFilePath, outputFilePath, executorService);
         } catch (IOException | InterruptedException e) {
             logger.severe("Error during CSV processing: " + e.getMessage());
+        } finally {
+            // Shutdown the executor service
+            executorService.shutdown();
         }
     }
 
-    private static void processCsv(String inputFilePath, String outputFilePath) throws IOException, InterruptedException {
+    private static void processCsv(String inputFilePath, String outputFilePath, ExecutorService executorService)
+            throws IOException, InterruptedException {
         configureLogger();  // Configuring logger
 
         // Create a blocking queue for producer-consumer model
         BlockingQueue<CSVRecord> recordQueue = new LinkedBlockingQueue<>();
-
-        // Create executor service with producer and consumer threads
-        ExecutorService executorService = Executors.newFixedThreadPool(NUM_PRODUCER_THREADS + 1);
 
         // Start consumer thread for writing to output CSV
         executorService.submit(() -> {
@@ -77,7 +80,7 @@ public class CsvProcessor {
             });
         }
 
-        // Shutdown the executor service and wait for termination
+        // Wait for all threads to complete
         executorService.shutdown();
         executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 
