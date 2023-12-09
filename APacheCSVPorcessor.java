@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -77,9 +77,9 @@ public class CsvProcessor {
             });
         }
 
-        // Wait for all threads to complete
+        // Shutdown the executor service and wait for termination
         executorService.shutdown();
-        executorService.awaitTermination(Long.MAX_VALUE, java.util.concurrent.TimeUnit.NANOSECONDS);
+        executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 
         logger.info("Processing completed successfully.");
     }
@@ -110,7 +110,7 @@ public class CsvProcessor {
                 }
             } else {
                 // Check if all producer threads have finished
-                if (Thread.activeCount() == 1) {
+                if (executorService.isTerminated()) {
                     break;
                 }
             }
