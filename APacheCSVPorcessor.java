@@ -85,27 +85,33 @@ public class CsvProcessor {
     }
 
     private static void writeOutputCsv(String outputFilePath, BlockingQueue<CSVRecord> recordQueue) throws IOException {
-        try (FileWriter writer = new FileWriter(outputFilePath)) {
-            // Set to store unique account numbers
-            Set<String> uniqueAccounts = new HashSet<>();
+        // Set to store unique account numbers
+        Set<String> uniqueAccounts = new HashSet<>();
 
-            // Continuously poll records from the queue
-            while (true) {
-                CSVRecord record = recordQueue.poll();
-                if (record != null) {
-                    String accountNumber = record.get(0).trim();
+        // Continue processing until there are no more records in the queue
+        while (true) {
+            CSVRecord record = recordQueue.poll();
+            if (record != null) {
+                String accountNumber = record.get(0).trim();
 
-                    // Process the account number
-                    processRow(accountNumber, uniqueAccounts);
+                // Process the account number
+                processRow(accountNumber, uniqueAccounts);
 
-                    // Write unique account numbers to the output CSV
-                    if (uniqueAccounts.size() >= BATCH_SIZE) {
+                // Write unique account numbers to the output CSV
+                if (uniqueAccounts.size() >= BATCH_SIZE) {
+                    try (FileWriter writer = new FileWriter(outputFilePath, true)) {
                         for (String uniqueAccount : uniqueAccounts) {
                             writer.write(uniqueAccount + "\n");
                         }
-                        // Clear the set after writing
-                        uniqueAccounts.clear();
                     }
+
+                    // Clear the set after writing
+                    uniqueAccounts.clear();
+                }
+            } else {
+                // Check if all producer threads have finished
+                if (Thread.activeCount() == 1) {
+                    break;
                 }
             }
         }
