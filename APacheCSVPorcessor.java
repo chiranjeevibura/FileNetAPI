@@ -11,9 +11,13 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class CsvProcessor {
 
+    private static final Logger logger = Logger.getLogger(CsvProcessor.class.getName());
     private static final int NUM_PRODUCER_THREADS = 5;
     private static final int BATCH_SIZE = 10000;
 
@@ -24,11 +28,13 @@ public class CsvProcessor {
         try {
             processCsv(inputFilePath, outputFilePath);
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            logger.severe("Error during CSV processing: " + e.getMessage());
         }
     }
 
     private static void processCsv(String inputFilePath, String outputFilePath) throws IOException, InterruptedException {
+        configureLogger();  // Configuring logger
+
         // Create a blocking queue for producer-consumer model
         BlockingQueue<CSVRecord> recordQueue = new LinkedBlockingQueue<>();
 
@@ -40,7 +46,7 @@ public class CsvProcessor {
             try {
                 writeOutputCsv(outputFilePath, recordQueue);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.severe("Error during writing output CSV: " + e.getMessage());
             }
         });
 
@@ -66,7 +72,7 @@ public class CsvProcessor {
                     // Close the CSVParser
                     csvParser.close();
                 } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
+                    logger.severe("Error during CSV processing: " + e.getMessage());
                 }
             });
         }
@@ -75,7 +81,7 @@ public class CsvProcessor {
         executorService.shutdown();
         executorService.awaitTermination(Long.MAX_VALUE, java.util.concurrent.TimeUnit.NANOSECONDS);
 
-        System.out.println("Processing completed successfully.");
+        logger.info("Processing completed successfully.");
     }
 
     private static void writeOutputCsv(String outputFilePath, BlockingQueue<CSVRecord> recordQueue) throws IOException {
@@ -110,5 +116,12 @@ public class CsvProcessor {
 
         // Add the account number to the set
         uniqueAccounts.add(accountNumber);
+    }
+
+    private static void configureLogger() throws IOException {
+        FileHandler fileHandler = new FileHandler("CsvProcessor.log");
+        fileHandler.setFormatter(new SimpleFormatter());
+        logger.addHandler(fileHandler);
+        logger.setUseParentHandlers(false);  // Disable console logging
     }
 }
