@@ -37,7 +37,7 @@ public class CsvProcessor {
         // Start consumer thread for writing to output CSV
         executorService.submit(() -> {
             try {
-                writeOutputCsv(outputFilePath, recordQueue);
+                writeOutputCsv(outputFilePath, recordQueue, executorService);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -71,7 +71,8 @@ public class CsvProcessor {
         System.out.println("Processing completed successfully.");
     }
 
-    private static void writeOutputCsv(String outputFilePath, BlockingQueue<CSVRecord> recordQueue) throws IOException {
+    private static void writeOutputCsv(String outputFilePath, BlockingQueue<CSVRecord> recordQueue, ExecutorService executorService)
+            throws IOException {
         Set<String> uniqueAccounts = new HashSet<>();
 
         while (true) {
