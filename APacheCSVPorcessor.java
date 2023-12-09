@@ -21,58 +21,64 @@ public class CsvProcessor {
         String inputFilePath = "input.csv";
         String outputFilePath = "output.csv";
 
-        processCsv(inputFilePath, outputFilePath);
-    }
-
-    private static void processCsv(String inputFilePath, String outputFilePath) {
         try {
-            // Create a blocking queue for producer-consumer model
-            BlockingQueue<CSVRecord> recordQueue = new LinkedBlockingQueue<>();
-
-            // Create executor service with producer and consumer threads
-            ExecutorService executorService = Executors.newFixedThreadPool(NUM_PRODUCER_THREADS + 1);
-
-            // Start consumer thread for writing to output CSV
-            executorService.submit(() -> writeOutputCsv(outputFilePath, recordQueue));
-
-            // Start producer threads for reading and processing CSV records
-            for (int i = 0; i < NUM_PRODUCER_THREADS; i++) {
-                executorService.submit(() -> {
-                    try {
-                        // Create a CSVParser with streaming capabilities
-                        CSVParser csvParser = CSVFormat.DEFAULT.parse(new FileReader(inputFilePath));
-
-                        // Process CSV records in batches
-                        int count = 0;
-                        for (CSVRecord record : csvParser) {
-                            // Offer the record to the queue
-                            recordQueue.offer(record);
-
-                            // Batch processing: Check if it's time to write to output
-                            if (++count % BATCH_SIZE == 0) {
-                                Thread.sleep(1); // Introduce a short delay to allow other threads to catch up
-                            }
-                        }
-
-                        // Close the CSVParser
-                        csvParser.close();
-                    } catch (IOException | InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                });
-            }
-
-            // Wait for all threads to complete
-            executorService.shutdown();
-            executorService.awaitTermination(Long.MAX_VALUE, java.util.concurrent.TimeUnit.NANOSECONDS);
-
-            System.out.println("Processing completed successfully.");
+            processCsv(inputFilePath, outputFilePath);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    private static void writeOutputCsv(String outputFilePath, BlockingQueue<CSVRecord> recordQueue) {
+    private static void processCsv(String inputFilePath, String outputFilePath) throws IOException, InterruptedException {
+        // Create a blocking queue for producer-consumer model
+        BlockingQueue<CSVRecord> recordQueue = new LinkedBlockingQueue<>();
+
+        // Create executor service with producer and consumer threads
+        ExecutorService executorService = Executors.newFixedThreadPool(NUM_PRODUCER_THREADS + 1);
+
+        // Start consumer thread for writing to output CSV
+        executorService.submit(() -> {
+            try {
+                writeOutputCsv(outputFilePath, recordQueue);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // Start producer threads for reading and processing CSV records
+        for (int i = 0; i < NUM_PRODUCER_THREADS; i++) {
+            executorService.submit(() -> {
+                try {
+                    // Create a CSVParser with streaming capabilities
+                    CSVParser csvParser = CSVFormat.DEFAULT.parse(new FileReader(inputFilePath));
+
+                    // Process CSV records in batches
+                    int count = 0;
+                    for (CSVRecord record : csvParser) {
+                        // Offer the record to the queue
+                        recordQueue.offer(record);
+
+                        // Batch processing: Check if it's time to write to output
+                        if (++count % BATCH_SIZE == 0) {
+                            Thread.sleep(1); // Introduce a short delay to allow other threads to catch up
+                        }
+                    }
+
+                    // Close the CSVParser
+                    csvParser.close();
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        // Wait for all threads to complete
+        executorService.shutdown();
+        executorService.awaitTermination(Long.MAX_VALUE, java.util.concurrent.TimeUnit.NANOSECONDS);
+
+        System.out.println("Processing completed successfully.");
+    }
+
+    private static void writeOutputCsv(String outputFilePath, BlockingQueue<CSVRecord> recordQueue) throws IOException {
         try (FileWriter writer = new FileWriter(outputFilePath)) {
             // Set to store unique account numbers
             Set<String> uniqueAccounts = new HashSet<>();
@@ -96,8 +102,6 @@ public class CsvProcessor {
                     }
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
