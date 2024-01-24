@@ -15,7 +15,8 @@ public class VaultCommands {
         }
 
         // Extract values from properties file
-        String vaultUrl = properties.getProperty("vault.url");
+        String vaultUrl 
+            = properties.getProperty("vault.url");
         String roleId = properties.getProperty("role.id");
         String secretId = properties.getProperty("secret.id");
         String namespace = properties.getProperty("namespace");
@@ -24,20 +25,27 @@ public class VaultCommands {
             // Run the first curl command to log in to Secrets Vault and extract client token
             String loginCommand = String.format("curl -X POST %s/vl/auth/approle/login -H 'content-type: application/json' " +
                     "-H 'x-vault-namespace: %s' -d '{\"role_id\":\"%s\", \"secret_id\":\"%s\"}'", vaultUrl, namespace, roleId, secretId);
+            System.out.println("Executing Command: " + loginCommand);
             String clientToken = executeCurlCommandAndGetToken(loginCommand);
 
-            // Run the second curl command to rotate the password
-            String rotateCommand = String.format("curl -X POST %s/vl/oracle/rotate-role/CHIRU_LAB -H 'x-vault-namespace:%s' " +
-                    "-H 'x-vault-token: %s'", vaultUrl, namespace, clientToken);
-            // Execute rotateCommand
+            if (clientToken != null) {
+                // Run the second curl command to rotate the password
+                String rotateCommand = String.format("curl -X POST %s/vl/oracle/rotate-role/CHIRU_LAB -H 'x-vault-namespace:%s' " +
+                        "-H 'x-vault-token: %s'", vaultUrl, namespace, clientToken);
+                System.out.println("\nExecuting Command: " + rotateCommand);
+                executeCurlCommand(rotateCommand);
 
-            // Run the third curl command to retrieve the password and extract it
-            String retrieveCommand = String.format("curl -X GET %s/vl/oracle/static-creds/CHIRU_LAB -H 'x-vault-namespace:%s' " +
-                    "-H 'x-vault-token: %s'", vaultUrl, namespace, clientToken);
-            String retrievedPassword = executeCurlCommandAndGetPassword(retrieveCommand);
+                // Run the third curl command to retrieve the password and extract it
+                String retrieveCommand = String.format("curl -X GET %s/vl/oracle/static-creds/CHIRU_LAB -H 'x-vault-namespace:%s' " +
+                        "-H 'x-vault-token: %s'", vaultUrl, namespace, clientToken);
+                System.out.println("\nExecuting Command: " + retrieveCommand);
+                String retrievedPassword = executeCurlCommandAndGetPassword(retrieveCommand);
 
-            // Print the retrieved password
-            System.out.println("Retrieved Password: " + retrievedPassword);
+                // Print the retrieved password
+                System.out.println("\nRetrieved Password: " + retrievedPassword);
+            } else {
+                System.out.println("Failed to obtain client token. Check the output of the first command.");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,6 +67,17 @@ public class VaultCommands {
         return null; // Handle if client token is not found
     }
 
+    private static void executeCurlCommand(String command) throws IOException {
+        Process process = Runtime.getRuntime().exec(command);
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);  // Print each line of the command output
+            }
+        }
+    }
+
     private static String executeCurlCommandAndGetPassword(String command) throws IOException {
         Process process = Runtime.getRuntime().exec(command);
 
@@ -72,13 +91,6 @@ public class VaultCommands {
             }
         }
 
-      
-
         return null; // Handle if password is not found
     }
 }
-config.properties
-  vault.url=https://vault-dev.abc.com
-role.id=rolePQR
-secret.id=a03b919d-b4df-f101-04fd-3£2606e73523
-namespace=ait/11/dbname//dev
