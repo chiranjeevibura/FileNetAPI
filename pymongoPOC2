@@ -1,0 +1,40 @@
+Certainly! Below is a Python script that connects to a MongoDB database using the `pymongo` library and runs a sample query to retrieve documents from an existing collection:
+
+```python
+import pymongo
+from pymongo import MongoClient
+
+# MongoDB connection details
+mongo_host = "your_mongo_host"  # e.g., "localhost"
+mongo_port = "your_mongo_port"  # e.g., 27017
+mongo_database = "your_mongo_database"  # e.g., "my_database"
+mongo_collection = "your_mongo_collection"  # e.g., "my_collection"
+
+# Connect to MongoDB
+mongo_client = MongoClient(f"mongodb://{mongo_host}:{mongo_port}")
+mongo_db = mongo_client[mongo_database]
+mongo_coll = mongo_db[mongo_collection]
+
+# Sample query to retrieve all documents from the collection
+query_result = mongo_coll.find()
+
+# Iterate over the query result and print each document
+for document in query_result:
+    print(document)
+```
+
+Replace `your_mongo_host`, `your_mongo_port`, `your_mongo_database`, and `your_mongo_collection` with the actual values for your MongoDB database, and collection.
+
+Ensure that you have the `pymongo` library installed in your Python environment:
+
+```bash
+pip install pymongo
+```
+
+This script establishes a connection to the MongoDB database using the provided connection details, retrieves all documents from the specified collection using the `find()` method, and iterates over the result to print each document.
+
+Modify the query as needed to retrieve specific documents based on your requirements, using the `find()` method with query filters. For example, to retrieve documents where the value of a field named "field_name" is equal to "field_value", you can use:
+
+```python
+query_result = mongo_coll.find({"field_name": "field_value"})
+```
