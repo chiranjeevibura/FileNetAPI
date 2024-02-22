@@ -1,0 +1,44 @@
+Certainly! Below is a simplified Python script that connects to a MongoDB database using the `pymongo` library. This script connects to a local MongoDB instance running on the default port (`27017`), selects a database named `my_database`, and inserts a document into a collection named `my_collection`. You can adjust the connection details and database/collection names as needed for your setup.
+
+Make sure you have the `pymongo` library installed before running this script:
+
+```bash
+pip install pymongo
+```
+
+Here's the Python script:
+
+```python
+import pymongo
+from pymongo import MongoClient
+
+# MongoDB connection details
+mongo_host = "your_mongo_host"  # e.g., "localhost"
+mongo_port = "your_mongo_port"  # e.g., 27017
+mongo_database = "your_mongo_database"  # e.g., "my_database"
+mongo_collection = "your_mongo_collection"  # e.g., "my_collection"
+
+# Connect to MongoDB
+mongo_client = MongoClient(f"mongodb://{mongo_host}:{mongo_port}")
+mongo_db = mongo_client[mongo_database]
+mongo_coll = mongo_db[mongo_collection]
+
+# Insert a document into the collection
+document = {"key": "value"}
+mongo_coll.insert_one(document)
+
+# Print the inserted document
+print("Inserted document:", document)
+```
+
+This script can be used as a template for connecting to and interacting with a MongoDB database using Python. You can modify it to fit your specific use case, such as inserting data from an Oracle database or retrieving data from a MongoDB collection.
+
+If you want to connect to a remote MongoDB instance, replace `mongo_host` and `mongo_port` with the appropriate values provided by your MongoDB hosting provider. If your MongoDB instance requires authentication, you can also specify the username and password as part of the connection string.
+
+For example, if your MongoDB instance is hosted on `mongodb://your_username:your_password@your_mongo_host:your_mongo_port`, you can modify the connection string as follows:
+
+```python
+mongo_client = MongoClient(f"mongodb://your_username:your_password@{mongo_host}:{mongo_port}")
+```
+
+Keep in mind that it's best to avoid hardcoding sensitive information like passwords in your scripts. Consider using environment variables or configuration files to securely store and access credentials.
