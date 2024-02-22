@@ -1,0 +1,52 @@
+Certainly! To connect to an Oracle database and run a sample query to retrieve results, you can use the `cx_Oracle` library in Python. Here is a basic Python script that does this:
+
+```python
+import cx_Oracle
+
+# Define the connection details
+oracle_user = "YOUR_USERNAME"
+oracle_password = "YOUR_PASSWORD"
+oracle_host = "YOUR_HOST"
+oracle_port = "YOUR_PORT"
+oracle_sid = "YOUR_SID"
+
+# Construct the connection string
+connection_string = f"{oracle_user}/{oracle_password}@{oracle_host}:{oracle_port}/{oracle_sid}"
+
+# Establish a connection to the Oracle database
+connection = cx_Oracle.connect(connection_string)
+
+# Create a cursor
+cursor = connection.cursor()
+
+# Define a sample query
+query = """
+        SELECT *
+        FROM YOUR_TABLE
+        WHERE YOUR_CONDITION
+        """
+
+# Execute the query
+cursor.execute(query)
+
+# Fetch the results
+results = cursor.fetchall()
+
+# Iterate over the results
+for row in results:
+    print(row)
+
+# Close the cursor and connection
+cursor.close()
+connection.close()
+```
+
+Replace the placeholders `YOUR_USERNAME`, `YOUR_PASSWORD`, `YOUR_HOST`, `YOUR_PORT`, `YOUR_SID`, `YOUR_TABLE`, and `YOUR_CONDITION` with the actual values for your Oracle database, table, and query condition.
+
+Ensure that you have the `cx_Oracle` library installed in your Python environment:
+
+```bash
+pip install cx_Oracle
+```
+
+This script establishes a connection to the Oracle database using the provided connection details, creates a cursor, and executes the sample query. It fetches the results and prints each row to the console. Finally, it closes the cursor and connection to release resources.
