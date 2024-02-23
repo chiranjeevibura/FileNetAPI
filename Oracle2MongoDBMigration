@@ -1,0 +1,84 @@
+from datetime import datetime
+from pyspark.sql import SparkSession
+from pymongo import MongoClient
+import pytz
+
+# Function to establish Oracle database connection and read data
+def read_data_from_oracle():
+    # Oracle database connection details
+    oracle_user = "YOUR_ORACLE_USER"
+    oracle_password = "YOUR_ORACLE_PASSWORD"
+    oracle_host = "YOUR_ORACLE_HOST"
+    oracle_port = "YOUR_ORACLE_PORT"
+    oracle_sid = "YOUR_ORACLE_SID"
+    oracle_table = "YOUR_ORACLE_TABLE"
+
+    # Spark session
+    spark = SparkSession.builder \
+        .appName("Oracle to MongoDB Migration") \
+        .getOrCreate()
+
+    # Read data from Oracle
+    df = spark.read \
+        .format("jdbc") \
+        .option("url", f"jdbc:oracle:thin:@{oracle_host}:{oracle_port}/{oracle_sid}") \
+        .option("dbtable", oracle_table) \
+        .option("user", oracle_user) \
+        .option("password", oracle_password) \
+        .load()
+
+    # Count number of rows in Oracle table
+    num_rows = df.count()
+    print(f"Number of rows in Oracle table '{oracle_table}': {num_rows}")
+
+    return df
+
+# Function to establish MongoDB database connection and write data
+def write_data_to_mongodb(df):
+    # MongoDB connection details
+    mongo_uri = "mongodb://YOUR_MONGO_HOST:YOUR_MONGO_PORT"
+    mongo_database = "YOUR_MONGO_DATABASE"
+    mongo_collection = "YOUR_MONGO_COLLECTION"
+
+    # Connect to MongoDB
+    mongo_client = MongoClient(mongo_uri)
+    mongo_db = mongo_client[mongo_database]
+    mongo_coll = mongo_db[mongo_collection]
+
+    # Before record count
+    num_before = mongo_coll.count_documents({})
+
+    # Convert DataFrame to list of dictionaries
+    records = df.toJSON().map(lambda j: json.loads(j)).collect()
+
+    # Write data to MongoDB collection
+    mongo_coll.insert_many(records)
+
+    # After record count
+    num_after = mongo_coll.count_documents({})
+
+    # Print before and after counts
+    print(f"Number of records before migration in '{mongo_collection}': {num_before}")
+    print(f"Number of records after migration in '{mongo_collection}': {num_after}")
+
+    # Close MongoDB connection
+    mongo_client.close()
+
+# Function to calculate migration time
+def calculate_migration_time(start_time):
+    end_time = datetime.now(pytz.utc)
+    migration_time = end_time - start_time
+    print(f"Migration time: {migration_time}")
+
+# Main function
+if __name__ == "__main__":
+    start_time = datetime.now(pytz.utc)
+
+    # Read data from Oracle
+    df = read_data_from_oracle()
+
+    # Write data to MongoDB
+    write_data_to_mongodb(df)
+
+    # Calculate migration time
+    calculate_migration_time(start_time)
