@@ -1,0 +1,52 @@
+Slide 1: Title Slide
+Title: Streamlining Data Migration: From FileNet P8 to MongoDB with Apache Spark
+Subtitle: A Proof-of-Concept for Scalable and Efficient Data Movement
+Your Name and Team (optional)
+Company Logo (optional)
+Speaker Notes
+Good morning/afternoon, esteemed executives. Today, I'm presenting a proof-of-concept (POC) for migrating data from our FileNet P8 (Oracle database) to MongoDB, a NoSQL database. This POC utilizes Apache Spark, a powerful tool for handling large-scale data processing. Our goal is to establish a scalable and efficient data migration strategy for future endeavors.
+
+Slide 2: Business Challenge
+Title: The Challenge: Migrating Legacy Data
+Bullet Point 1: Siloed Data in FileNet P8 (Oracle)
+Bullet Point 2: Need for Scalable and Flexible Storage (MongoDB)
+Bullet Point 3: Requirement for Efficient Data Movement for Future Migrations
+Image of 
+
+Speaker Notes
+Currently, our data resides within the FileNet P8 system, an Oracle relational database management system (RDBMS). While it serves us well, it may not be ideal for future needs. We require a more scalable and flexible storage solution, which is where MongoDB, a NoSQL database, comes in. This POC focuses on developing a process for efficient data movement that can be leveraged for future large-scale migrations.
+
+Slide 3: Proposed Solution: Apache Spark
+Title: Apache Spark: The Powerhouse for Data Migration
+Image: Replace with a diagram showcasing Apache Spark architecture with Spark SQL, Spark Streaming, and MLlib components. You can search online for "Apache Spark Architecture" to find suitable diagrams.
+Bullet Point 1: Distributed Processing for Large Datasets
+Bullet Point 2: In-Memory Processing for Speed
+Bullet Point 3: ETL Capabilities: Extract, Transform, Load
+Speaker Notes
+This POC utilizes Apache Spark, a distributed processing framework designed for handling massive datasets. Spark excels at in-memory processing, significantly accelerating data transformations. Additionally, Spark offers built-in capabilities for the entire Extract-Transform-Load (ETL) pipeline, making it a one-stop shop for data migration.
+
+Slide 4: POC Design: ETL with Spark
+Title: A 3-Step Approach: Extract, Transform, Load
+Bullet Point 1: Extract: Read Data from Oracle using Spark SQL
+Bullet Point 2: Transform: Cleanse and Prepare Data within Spark DataFrames
+Bullet Point 3: Load: Write Transformed Data to MongoDB
+Speaker Notes
+Our POC leverages Spark's ETL capabilities. In the Extract phase, Spark SQL reads data from the Oracle database. The Transform phase utilizes Spark DataFrames, in-memory distributed datasets, for data cleansing and preparation. Finally, the Load phase writes the transformed data to MongoDB.
+
+Slide 5: Transformation Details
+Title: Data Wrangling with Spark DataFrames
+Bullet Point 1: Choice List Replacement: Standardize Values
+Bullet Point 2: Constant to String Conversion: Improve Clarity
+Bullet Point 3: Oracle Blob Decoding: Generate HCP Path
+Bullet Point 4: Data Type Conversions: Ensure Compatibility
+Bullet Point 5: UUID Generation: Unique Identifiers for Records
+Image of 
+
+Speaker Notes
+The transformation phase plays a crucial role in data preparation. We leverage Spark DataFrames to perform various tasks:
+
+Choice List Replacement: Standardize values from dropdown menus.
+Constant to String Conversion: Enhance data clarity.
+Oracle Blob Decoding: Extract valuable information from Oracle BLOBs (Binary Large Objects) and generate HCP (Hybrid Cloud Platform) paths.
+Data Type Conversions: Ensure compatibility between source and target databases.
+UUID Generation: Assign unique identifiers (Universally Unique Identifiers) to records for better tracking.
