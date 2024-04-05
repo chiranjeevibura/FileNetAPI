@@ -162,6 +162,10 @@ else:
 
 Reconcilation - 
 
+To compare the record counts between Oracle and MongoDB during migration, you can modify the code to perform reconciliation after each successful batch or chunk of data migration. You can achieve this by introducing checkpoints and keeping track of the number of records migrated.
+
+Here's how you can modify the code to reconcile record counts after each successful batch migration:
+
 from pyspark.sql import SparkSession
 
 # Initialize Spark session
@@ -210,3 +214,9 @@ while True:
 # Close the Spark session
 spark.stop()
 
+In this modified code:
+
+After each batch migration, you retrieve the latest counts from both Oracle and MongoDB.
+The reconcile_records function is called to compare the counts and print whether they match or not.
+The migration process continues until it is complete, and then the Spark session is stopped.
+By performing reconciliation after each batch migration, you can ensure that data consistency is maintained throughout the migration process.
