@@ -158,3 +158,55 @@ if oracle_attribute_sum == mongo_attribute_sum:
     print("Attribute values match. Data is consistent.")
 else:
     print("Attribute values differ. Discrepancy found.")
+
+
+Reconcilation - 
+
+from pyspark.sql import SparkSession
+
+# Initialize Spark session
+spark = SparkSession.builder \
+                    .appName("DataReconciliation") \
+                    .getOrCreate()
+
+# Read data from Oracle
+oracle_df = spark.read \
+                .format("jdbc") \
+                .option("url", "jdbc:oracle:thin:@<Oracle_HOST>:<Oracle_PORT>:<Oracle_SID>") \
+                .option("dbtable", "<ORACLE_TABLE>") \
+                .option("user", "<USERNAME>") \
+                .option("password", "<PASSWORD>") \
+                .load()
+
+# Read data from MongoDB
+mongo_df = spark.read \
+                .format("mongo") \
+                .option("uri", "mongodb://<MONGODB_HOST>:<MONGODB_PORT>/<MONGODB_DATABASE>.<MONGODB_COLLECTION>") \
+                .load()
+
+# Function to perform reconciliation
+def reconcile_records(oracle_count, mongo_count):
+    if oracle_count == mongo_count:
+        print("Record counts match. Data is consistent.")
+    else:
+        print("Record counts differ. Discrepancy found.")
+
+# Perform reconciliation after each batch migration
+while True:
+    # Migrate data from Oracle to MongoDB in batches
+    # (Code for batch migration goes here)
+
+    # Get the latest counts from both sources
+    latest_oracle_count = oracle_df.count()
+    latest_mongo_count = mongo_df.count()
+
+    # Perform reconciliation
+    reconcile_records(latest_oracle_count, latest_mongo_count)
+
+    # Break the loop if migration is complete
+    if migration_complete:
+        break
+
+# Close the Spark session
+spark.stop()
+
