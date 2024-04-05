@@ -90,3 +90,71 @@ Spark Solution: Spark leverages in-memory processing, meaning it temporarily sto
 
 Challenge: Migrating data often requires various transformations to ensure compatibility with the target system (MongoDB). Traditional methods might involve separate tools or manual coding for each step, increasing complexity and potential for errors.
 Spark Solution: Spark offers a unified platform for the entire ETL pipeline – Extract, Transform, Load. You can leverage Spark SQL to efficiently read data from your Oracle database. Spark DataFrames provide a flexible structure to manipulate and transform your data within the same environment. Finally, Spark connectors seamlessly write the transformed data into MongoDB. Imagine having one powerful tool handle all the data movement and manipulation steps, streamlining the migration process and minimizing errors.
+
+
+Record Count Reconciliation:
+
+
+from pyspark.sql import SparkSession
+
+# Initialize Spark session
+spark = SparkSession.builder \
+                    .appName("DataReconciliation") \
+                    .getOrCreate()
+
+# Read data from Oracle
+oracle_df = spark.read \
+                .format("jdbc") \
+                .option("url", "jdbc:oracle:thin:@<Oracle_HOST>:<Oracle_PORT>:<Oracle_SID>") \
+                .option("dbtable", "<ORACLE_TABLE>") \
+                .option("user", "<USERNAME>") \
+                .option("password", "<PASSWORD>") \
+                .load()
+
+# Read data from MongoDB
+mongo_df = spark.read \
+                .format("mongo") \
+                .option("uri", "mongodb://<MONGODB_HOST>:<MONGODB_PORT>/<MONGODB_DATABASE>.<MONGODB_COLLECTION>") \
+                .load()
+
+# Perform reconciliation by comparing record counts
+oracle_count = oracle_df.count()
+mongo_count = mongo_df.count()
+
+if oracle_count == mongo_count:
+    print("Record counts match. Data is consistent.")
+else:
+    print("Record counts differ. Discrepancy found.")
+
+Data Attribute Reconciliation:
+
+from pyspark.sql import SparkSession
+
+# Initialize Spark session
+spark = SparkSession.builder \
+                    .appName("DataReconciliation") \
+                    .getOrCreate()
+
+# Read data from Oracle
+oracle_df = spark.read \
+                .format("jdbc") \
+                .option("url", "jdbc:oracle:thin:@<Oracle_HOST>:<Oracle_PORT>:<Oracle_SID>") \
+                .option("dbtable", "<ORACLE_TABLE>") \
+                .option("user", "<USERNAME>") \
+                .option("password", "<PASSWORD>") \
+                .load()
+
+# Read data from MongoDB
+mongo_df = spark.read \
+                .format("mongo") \
+                .option("uri", "mongodb://<MONGODB_HOST>:<MONGODB_PORT>/<MONGODB_DATABASE>.<MONGODB_COLLECTION>") \
+                .load()
+
+# Perform reconciliation by comparing specific attributes
+oracle_attribute_sum = oracle_df.selectExpr("sum(column_name)").collect()[0][0]
+mongo_attribute_sum = mongo_df.selectExpr("sum(column_name)").collect()[0][0]
+
+if oracle_attribute_sum == mongo_attribute_sum:
+    print("Attribute values match. Data is consistent.")
+else:
+    print("Attribute values differ. Discrepancy found.")
