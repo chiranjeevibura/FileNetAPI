@@ -1,28 +1,50 @@
-Here's a polished write-up highlighting your skills and accomplishments across P8 and CDL:
-Technical Expertise and Achievements
-P8 Space:
-Successfully delivered multiple migrations, showcasing expertise in:
-Coding
-Testing
-Migration
-Reporting
-Automated most migration efforts, demonstrating proficiency in:
-Automation scripting
-Process optimization
-Introduced innovative solutions:
-Automated vault integration
-Vault retrieval solutions
-Resolved numerous vulnerabilities and infrastructure-related issues, showcasing:
-Strong problem-solving skills
-Infrastructure expertise
-CDL Space:
-Introduced Spark and Python for data migration, demonstrating:
-Technical adaptability
-Knowledge of big data technologies
-Delivered Proof of Concept (POC) quickly, showcasing:
-Rapid prototyping skills
-Ability to meet tight deadlines
-Gearing up for production migration, highlighting:
-Commitment to delivering high-quality results
-Ability to scale solutions
-Feel free to modify this write-up to fit your specific needs and style!
+Sure, here's a draft for the email regarding the migration process:
+
+---
+
+Subject: Migration Process for Data from Oracle to MongoDB
+
+Dear Team,
+
+I hope this email finds you well. This email outlines the steps required to perform the data migration from Oracle to MongoDB. Please follow the instructions carefully to ensure a smooth and successful migration.
+
+**Steps for Migration:**
+
+1. **Check Spark Status:**
+   - Before initiating the migration, check whether Spark is running using the `check_spark.sh` script.
+   - Command: `./check_spark.sh`
+   - If Spark is running, proceed to the next step. If not, start the Spark master and worker nodes as described below.
+
+2. **Start Spark Master and Worker Nodes:**
+   - If Spark is not running, start the Spark master node using the `start_master.sh` script.
+   - Command: `./start_master.sh`
+   - Next, start the Spark worker node using the `start_worker.sh` script.
+   - Command: `./start_worker.sh`
+
+3. **Review and Update Configuration File:**
+   - Review the `config_<env>.ini` file to ensure all parameters are correctly set.
+   - Update the Oracle and MongoDB connection parameters, queries, and any other custom properties as needed.
+
+4. **Initiate Migration:**
+   - Once the configuration file is ready, initiate the migration by running the `sparkmigrator_edocs_ce1dev_to_cdldev.sh` script.
+   - Depending on the data volume, you can run the script in the foreground or background.
+   - Command (foreground): `./sparkmigrator_edocs_ce1dev_to_cdldev.sh`
+   - Command (background): `nohup ./sparkmigrator_edocs_ce1dev_to_cdldev.sh &`
+
+5. **Review Migrated Data:**
+   - After the migration is completed, review the data in the respective MongoDB collection to ensure the data has been migrated correctly.
+   - Verify the data integrity and consistency in the MongoDB collection.
+
+Please ensure all steps are followed in sequence to avoid any issues during the migration process. If you encounter any problems or need assistance, feel free to reach out to the support team.
+
+Thank you for your cooperation.
+
+Best regards,
+
+[Your Name]  
+[Your Position]  
+[Your Contact Information]
+
+---
+
+This email covers all the necessary steps for the migration process, ensuring that the team can follow along and complete the migration smoothly. If there are any specific details or additional instructions, feel free to add them accordingly.
