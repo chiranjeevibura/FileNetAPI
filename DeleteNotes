@@ -1,14 +1,72 @@
+### JIRA Story
 
-**Problem Statement:**
+**Story Title:** Implement FileNet Document Ingestion with Unique ID Generation and Error Handling
 
-We encountered an issue with our FileNet P8 system where one of the staging areas, `cache03`, was being utilized by other components, such as CSS, leading to rapid disk space consumption. This caused the staging area to reach 100% capacity. In FileNet P8, the staging area temporarily stores content before committing it to the content repository. When the staging area is full, the system cannot finalize the content element, resulting in a size mismatch error, specifically the `FNRCC0148E: CONTENT_CA_FINALIZE_FAILED_SIZE` error.
+**Story Description:**
+As a FileNet architect, I want to implement a document ingestion process that reads metadata and file paths from a CSV file, generates unique IDs for each document, and handles errors efficiently, so that I can avoid duplicate document ingestion and manage successful and failed ingestions separately.
 
-**Fix Implemented:**
+#### **Acceptance Criteria:**
 
-To address this issue, I have removed `cache03` from the P8 pool of staging areas. The system is now using only the remaining two staging area partitions, `cache01` and `cache02`. This adjustment should provide a permanent fix and prevent similar issues from occurring in the future.
+1. **CSV File Processing:**
+   - The system should read input data from a CSV file containing columns: `filePath`, `className`, `propertyName`, and `propertyValue`.
+   - The system should handle CSV files with multiple rows, processing each row independently.
 
-**Next Steps:**
+2. **Unique ID Generation:**
+   - The system should generate a unique ID for each document based on the metadata provided in the CSV file.
+   - The unique ID should be consistent for the same set of metadata to avoid duplicates if the same CSV is processed again.
 
-Please continue to test the system and monitor for any similar issues. If you encounter any further problems, do not hesitate to reach out to me directly.
+3. **Document Ingestion:**
+   - The system should add documents to the FileNet repository using the metadata and file paths provided in the CSV file.
+   - The system should use the generated unique ID as a custom unique identifier for the documents.
 
-Thank you.
+4. **Error Handling:**
+   - The system should handle errors gracefully, skipping failed rows and continuing with the rest of the CSV.
+   - The system should differentiate between types of errors (e.g., duplicate values, index errors, file-related errors) and provide custom error messages.
+
+5. **Success and Error Logs:**
+   - The system should create two output CSV files: `success.csv` and `error.csv`.
+   - `success.csv` should contain the original CSV data plus an additional column for the generated unique ID for each successfully ingested document.
+   - `error.csv` should contain the original CSV data plus an additional column for the custom error message for each failed row.
+
+6. **Resource Management:**
+   - The system should properly manage resources, ensuring that all file readers and writers are closed after processing.
+   - The system should use try-with-resources to handle file operations and ensure that resources are automatically closed.
+
+7. **Logging:**
+   - The system should log the generated unique IDs to the console for each processed document.
+
+#### **Tasks:**
+
+1. **Develop CSV Reading and Processing Functionality:**
+   - Implement code to read and parse the CSV file.
+   - Handle multiple rows and extract necessary metadata for each document.
+
+2. **Implement Unique ID Generation:**
+   - Develop a function to generate consistent unique IDs based on the metadata.
+   - Ensure the generated IDs are unique and consistent for the same set of metadata.
+
+3. **Document Ingestion to FileNet:**
+   - Implement code to create and add documents to the FileNet repository using the provided metadata and file paths.
+   - Use the generated unique ID as a custom unique identifier for each document.
+
+4. **Error Handling and Custom Messages:**
+   - Implement error handling to catch and process different types of exceptions.
+   - Provide custom error messages based on the exception type and content.
+
+5. **Output Success and Error Logs:**
+   - Implement code to create and write to `success.csv` and `error.csv` files.
+   - Ensure the correct information is logged, including unique IDs for successful ingestions and error messages for failed rows.
+
+6. **Resource Management and Logging:**
+   - Use try-with-resources for all file operations.
+   - Ensure proper resource management to avoid leaks.
+   - Log unique IDs to the console for each processed document.
+
+#### **Attachments:**
+- [Code Implementation](#)
+
+#### **Priority:** High
+
+#### **Story Points:** 8
+
+This JIRA story outlines the complete implementation plan for the FileNet document ingestion process with unique ID generation, error handling, and logging.
