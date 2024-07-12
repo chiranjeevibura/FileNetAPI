@@ -1,72 +1,238 @@
-### JIRA Story
+### JIRA Task
 
-**Story Title:** Implement FileNet Document Ingestion with Unique ID Generation and Error Handling
+**Task Title:** eValidator Feature Extension - Object Count Validator
 
-**Story Description:**
-As a FileNet architect, I want to implement a document ingestion process that reads metadata and file paths from a CSV file, generates unique IDs for each document, and handles errors efficiently, so that I can avoid duplicate document ingestion and manage successful and failed ingestions separately.
+**Task Description:**
+Enhance the eValidator feature by adding an additional column, `ContentSize` in GB, to the search result of the Object Count Validator. When the "Validate" button is clicked, it should display the `ContentSize` in GB along with the existing `Symbolic Name` and `Count of Objects`.
 
-#### **Acceptance Criteria:**
+#### **Subtasks and Details:**
 
-1. **CSV File Processing:**
-   - The system should read input data from a CSV file containing columns: `filePath`, `className`, `propertyName`, and `propertyValue`.
-   - The system should handle CSV files with multiple rows, processing each row independently.
+1. **Update Search Results to Include ContentSize:**
+   - Modify the existing search functionality to calculate and include the `ContentSize` in GB for each object.
+   - Ensure the `ContentSize` is accurately calculated based on the size of the content associated with each object.
 
-2. **Unique ID Generation:**
-   - The system should generate a unique ID for each document based on the metadata provided in the CSV file.
-   - The unique ID should be consistent for the same set of metadata to avoid duplicates if the same CSV is processed again.
+2. **Update User Interface:**
+   - Add a new column to the search results table to display the `ContentSize` in GB.
+   - Ensure the new column is properly labeled and aligns with the existing columns (`Symbolic Name`, `Count of Objects`).
 
-3. **Document Ingestion:**
-   - The system should add documents to the FileNet repository using the metadata and file paths provided in the CSV file.
-   - The system should use the generated unique ID as a custom unique identifier for the documents.
+3. **Implement Validate Button Functionality:**
+   - Enhance the "Validate" button functionality to include the `ContentSize` in GB in the displayed results.
+   - Ensure that when the "Validate" button is clicked, it fetches and displays the `Symbolic Name`, `Count of Objects`, and `ContentSize` in GB.
 
-4. **Error Handling:**
-   - The system should handle errors gracefully, skipping failed rows and continuing with the rest of the CSV.
-   - The system should differentiate between types of errors (e.g., duplicate values, index errors, file-related errors) and provide custom error messages.
+4. **Data Retrieval and Calculation:**
+   - Implement the logic to retrieve the content size for each object from the repository.
+   - Calculate the total content size in GB for each object and ensure accuracy in the displayed results.
 
-5. **Success and Error Logs:**
-   - The system should create two output CSV files: `success.csv` and `error.csv`.
-   - `success.csv` should contain the original CSV data plus an additional column for the generated unique ID for each successfully ingested document.
-   - `error.csv` should contain the original CSV data plus an additional column for the custom error message for each failed row.
+5. **Testing and Validation:**
+   - Conduct thorough testing to ensure the new column is correctly added and populated.
+   - Validate that the `ContentSize` is accurately calculated and displayed alongside the `Symbolic Name` and `Count of Objects`.
+   - Test the updated "Validate" button functionality to ensure it works as expected.
 
-6. **Resource Management:**
-   - The system should properly manage resources, ensuring that all file readers and writers are closed after processing.
-   - The system should use try-with-resources to handle file operations and ensure that resources are automatically closed.
+6. **Error Handling and Performance Optimization:**
+   - Implement error handling for scenarios where the content size cannot be retrieved.
+   - Ensure performance optimization to handle large datasets efficiently.
 
-7. **Logging:**
-   - The system should log the generated unique IDs to the console for each processed document.
+7. **Documentation and Training:**
+   - Update documentation to reflect the new `ContentSize` column and the updated "Validate" button functionality.
+   - Provide training materials or sessions to help users understand and utilize the new feature.
 
-#### **Tasks:**
-
-1. **Develop CSV Reading and Processing Functionality:**
-   - Implement code to read and parse the CSV file.
-   - Handle multiple rows and extract necessary metadata for each document.
-
-2. **Implement Unique ID Generation:**
-   - Develop a function to generate consistent unique IDs based on the metadata.
-   - Ensure the generated IDs are unique and consistent for the same set of metadata.
-
-3. **Document Ingestion to FileNet:**
-   - Implement code to create and add documents to the FileNet repository using the provided metadata and file paths.
-   - Use the generated unique ID as a custom unique identifier for each document.
-
-4. **Error Handling and Custom Messages:**
-   - Implement error handling to catch and process different types of exceptions.
-   - Provide custom error messages based on the exception type and content.
-
-5. **Output Success and Error Logs:**
-   - Implement code to create and write to `success.csv` and `error.csv` files.
-   - Ensure the correct information is logged, including unique IDs for successful ingestions and error messages for failed rows.
-
-6. **Resource Management and Logging:**
-   - Use try-with-resources for all file operations.
-   - Ensure proper resource management to avoid leaks.
-   - Log unique IDs to the console for each processed document.
+#### **Expected Outcomes:**
+- The eValidator feature will be enhanced to include an additional `ContentSize` column in the search results.
+- Users will be able to see the `ContentSize` in GB along with the existing `Symbolic Name` and `Count of Objects` when clicking the "Validate" button.
+- The user interface will be updated to support the new column, making it easy to read and understand the additional information.
+- Robust testing and validation will ensure accuracy and reliability of the new feature.
 
 #### **Attachments:**
-- [Code Implementation](#)
+- [UI Mockups](#)
+- [Feature Specifications](#)
+- [Testing Plan](#)
+
+#### **Priority:** Medium
+
+#### **Story Points:** 5
+
+This task will enhance the eValidator feature by adding an additional column for `ContentSize` in GB to the search results of the Object Count Validator, providing users with more comprehensive information during validation.
+
+
+----------
+### JIRA Task
+
+**Task Title:** eValidator Feature Extension - HCP Validator
+
+**Task Description:**
+Enhance the eValidator feature by adding the HCP Validator. This extension will include additional features such as searching and downloading documents based on GUID. The "Search" button will allow users to search for an ID within a given namespace and display the result. The "Download" button will enable users to search for an ID within a given namespace and display the document in the viewer.
+
+#### **Subtasks and Details:**
+
+1. **Implement Search Functionality:**
+   - Develop the "Search" feature to allow users to input a GUID and search for it within a specified namespace.
+   - Ensure the search function accurately locates the document and retrieves the relevant metadata.
+   - Display the search results, including document details such as name, size, and last modified date.
+
+2. **Implement Download Functionality:**
+   - Develop the "Download" feature to enable users to download documents based on the GUID search.
+   - Integrate a document viewer to display the document once it is found and downloaded.
+   - Ensure the download process is secure and handles various document formats.
+
+3. **User Interface Enhancements:**
+   - Update the UI to include input fields for GUID and namespace.
+   - Add "Search" and "Download" buttons to the interface.
+   - Ensure the UI is intuitive and user-friendly, with clear instructions for users.
+
+4. **Handle Namespace Selection:**
+   - Implement a mechanism for users to specify the namespace for the search.
+   - Ensure the namespace selection is flexible and can handle multiple namespaces if required.
+
+5. **Testing and Validation:**
+   - Conduct thorough testing of the search and download functionalities.
+   - Validate that documents are accurately located and downloaded based on the GUID.
+   - Ensure the document viewer displays documents correctly and handles various formats.
+
+6. **Error Handling and Messaging:**
+   - Implement error handling for scenarios where documents cannot be found or downloaded.
+   - Provide clear and informative error messages to users in case of issues.
+   - Log errors for troubleshooting and analysis.
+
+7. **Performance Optimization:**
+   - Optimize the search and download processes for efficiency, especially for large datasets.
+   - Ensure that the system performs well under high load and with large documents.
+
+8. **Documentation and Training:**
+   - Update documentation to include instructions for using the HCP Validator features.
+   - Provide training sessions or materials to help users understand and utilize the new functionality.
+
+#### **Expected Outcomes:**
+- The eValidator feature will be extended to include the HCP Validator with search and download functionalities based on GUID.
+- Users will be able to efficiently search for and download documents within specified namespaces.
+- The user interface will be enhanced to support the new features, making it intuitive and easy to use.
+- Robust error handling and performance optimization will ensure a seamless user experience.
+
+#### **Attachments:**
+- [UI Mockups](#)
+- [Feature Specifications](#)
+- [Testing Plan](#)
 
 #### **Priority:** High
 
 #### **Story Points:** 8
 
-This JIRA story outlines the complete implementation plan for the FileNet document ingestion process with unique ID generation, error handling, and logging.
+This task will enhance the eValidator feature by adding the HCP Validator, providing users with powerful search and download capabilities based on GUID, and ensuring a user-friendly interface and robust performance.
+
+-----------
+### JIRA Task
+
+**Task Title:** eValidator Feature Extension - Adding Purge for All Environments
+
+**Task Description:**
+Enhance the existing eValidator feature by adding a purge functionality for all environments. Modify the current purge validator feature to include a new "TT Purge Validator" and introduce a new "LLE Purge Validator." The updated feature will include a dropdown menu for selecting Environment/OS/Class and buttons for "Purge" and "Status." The "Purge" button will delete all documents with a `modify_date` older than 90 days, and the "Status" button will display the count and size (in GB) of documents for each class under OD.
+
+#### **Subtasks and Details:**
+
+1. **Modify Existing Purge Validator Feature:**
+   - Enhance the current purge validator to include the new "TT Purge Validator."
+   - Ensure compatibility with all environments and document classes.
+   - Update the user interface to reflect the changes.
+
+2. **Add New LLE Purge Validator:**
+   - Develop the "LLE Purge Validator" feature.
+   - Ensure it can handle document purging based on the `modify_date` and environment/class selection.
+
+3. **Implement Dropdown Menu:**
+   - Add a dropdown menu to the UI for selecting Environment, OS, and Class.
+   - Ensure the dropdown options are dynamically populated based on available environments and classes.
+
+4. **Implement Purge Button Functionality:**
+   - Develop the functionality for the "Purge" button.
+   - The "Purge" button should delete all documents with a `modify_date` older than 90 days.
+   - Ensure the purging process is efficient and handles large volumes of documents.
+
+5. **Implement Status Button Functionality:**
+   - Develop the functionality for the "Status" button.
+   - The "Status" button should display the count and total size (in GB) of documents for each class under OD.
+   - Ensure the status information is accurate and up-to-date.
+
+6. **Testing and Validation:**
+   - Conduct thorough testing to ensure the new and modified features work as expected.
+   - Test the purge functionality across different environments and classes.
+   - Validate that the status information is accurate and reflects the correct document count and size.
+
+7. **User Interface Enhancements:**
+   - Update the user interface to incorporate the new dropdown menu and buttons.
+   - Ensure the UI is user-friendly and intuitive.
+   - Make any necessary adjustments to the layout and design.
+
+8. **Documentation and Training:**
+   - Update the documentation to include the new and modified features.
+   - Provide detailed instructions on how to use the new purge and status functionalities.
+   - Offer training sessions for users to familiarize them with the changes.
+
+#### **Expected Outcomes:**
+- The eValidator feature will be extended to include the new "TT Purge Validator" and "LLE Purge Validator."
+- Users will have the ability to purge documents older than 90 days across all environments and classes.
+- The "Status" button will provide accurate counts and sizes of documents, aiding in efficient document management.
+- The updated user interface will be intuitive and user-friendly, enhancing the overall user experience.
+
+#### **Attachments:**
+- [UI Mockups](#)
+- [Feature Specifications](#)
+- [Testing Plan](#)
+
+#### **Priority:** High
+
+#### **Story Points:** 8
+
+This task ensures a comprehensive enhancement of the eValidator feature, providing robust document purging and status reporting capabilities across all environments and document classes.
+
+----------------
+### JIRA Task
+
+**Task Title:** eValidator Feature Validation and Testing in UAT and PROD
+
+**Story Points:** 1
+
+**Task Description:**
+Review the eValidator Feature, specifically the HCP Validator, thoroughly in both the UAT and PROD environments. Identify and report any differences, failures, or issues. Ensure the feature functions as intended in both environments and document all findings with appropriate evidence.
+
+#### **Subtasks and Details:**
+
+1. **Review and Validate in UAT Environment:**
+   - Thoroughly test the HCP Validator feature in the UAT environment.
+   - Ensure all functionalities (search and download based on GUID) are working as expected.
+   - Document any differences or failures encountered during testing.
+
+2. **Review and Validate in PROD Environment:**
+   - Thoroughly test the HCP Validator feature in the PROD environment.
+   - Ensure all functionalities (search and download based on GUID) are working as expected.
+   - Document any differences or failures encountered during testing.
+
+3. **Compare UAT and PROD Results:**
+   - Compare the results from the UAT and PROD environments.
+   - Identify any discrepancies or issues that only occur in one environment.
+   - Ensure that the usage of the feature remains intact and consistent across both environments.
+
+4. **Document Findings:**
+   - Document all findings from the UAT and PROD environment testing.
+   - Include detailed descriptions of any issues, differences, and failures.
+   - Provide evidence such as screenshots, logs, or error messages to support the documentation.
+
+5. **Report and Recommendations:**
+   - Compile a report summarizing the findings from the validation and testing process.
+   - Include recommendations for addressing any identified issues or differences.
+   - Ensure the report is clear and actionable for further improvements.
+
+#### **Expected Outcomes:**
+- A thorough review of the HCP Validator feature in both UAT and PROD environments.
+- Documentation of any differences, failures, or issues encountered.
+- Clear and actionable recommendations for addressing any identified problems.
+- Assurance that the feature functions as intended in both environments, with usage intact.
+
+#### **Attachments:**
+- [Testing Logs and Evidence](#)
+- [Comparison Report](#)
+- [Issue Documentation](#)
+
+#### **Priority:** High
+
+#### **Story Points:** 1
+
+This task ensures the thorough validation and testing of the eValidator Feature - HCP Validator in both UAT and PROD environments, with comprehensive documentation and reporting of findings.
