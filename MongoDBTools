@@ -1,0 +1,61 @@
+### Description for Deleting Data Utility
+
+The **Delete Data Utility** is an essential tool designed to clean up test metadata from MongoDB efficiently by removing documents based on specific criteria, such as batch IDs. This utility leverages the `pymongo` library to connect to MongoDB, identify and delete documents with a specified batch ID. It ensures a streamlined and automated approach to maintaining a clean and manageable database, which is particularly beneficial during data migration processes where test data needs to be removed to avoid clutter and ensure accurate data integrity.
+
+#### Code Example:
+```python
+from pymongo import MongoClient
+
+# Replace the following with your MongoDB connection details
+client = MongoClient("mongodb://your_mongodb_uri")
+db = client["your_database_name"]
+collection = db["your_collection_name"]
+
+# Delete documents with batch_id equal to "abcdef"
+result = collection.delete_many({"batch_id": "abcdef"})
+print(f"Deleted {result.deleted_count} documents.")
+```
+
+#### Benefits:
+- **Efficiency**: Automates the deletion of test metadata, saving time and reducing manual effort.
+- **Data Integrity**: Ensures that only the specified test data is removed, maintaining the accuracy of the remaining data.
+- **Scalability**: Can handle large volumes of data, making it ideal for environments with millions of records.
+- **Automation**: Reduces human error by automating the deletion process, ensuring consistency and reliability.
+
+### Description for Updating Data Utility
+
+The **Update Data Utility** is a powerful tool designed to modify document metadata stored in MongoDB based on specific criteria. This utility uses the `pymongo` library to connect to MongoDB and perform bulk updates on documents that match a given batch ID. It allows for efficient and accurate updates, ensuring that all relevant documents are consistently modified in a single operation. This utility is crucial during data migration processes, where it can be used to update metadata as data is moved from Oracle to MongoDB, ensuring seamless integration and data consistency.
+
+#### Code Example:
+```python
+from pymongo import MongoClient
+
+# Replace the following with your MongoDB connection details
+client = MongoClient("mongodb://your_mongodb_uri")
+db = client["your_database_name"]
+collection = db["your_collection_name"]
+
+# Define the filter to match documents with batch_id equal to "abcdef"
+filter = {"batch_id": "abcdef"}
+
+# Define the update to be applied to the matched documents
+update = {"$set": {"your_field": "new_value"}}  # Update this line with your actual updates
+
+# Perform the update operation
+result = collection.update_many(filter, update)
+print(f"Matched {result.matched_count} documents and modified {result.modified_count} documents.")
+```
+
+#### Benefits:
+- **Efficiency**: Facilitates bulk updates, significantly reducing the time required to modify large datasets.
+- **Accuracy**: Ensures consistent updates across all matched documents, maintaining data integrity.
+- **Scalability**: Capable of handling updates for millions of records, making it suitable for large-scale data migration projects.
+- **Flexibility**: Can be easily adapted to update various fields as needed, supporting dynamic data migration requirements.
+
+### Overall Benefits During Data Migration:
+
+- **Streamlined Process**: Both utilities automate critical tasks, making the data migration process more efficient and less error-prone.
+- **Consistency and Integrity**: Ensures that metadata is accurately updated and unwanted test data is removed, maintaining the quality of the migrated data.
+- **Scalability**: Designed to handle large volumes of data, making them suitable for environments with millions of records.
+- **Reduced Manual Effort**: Automates repetitive tasks, allowing your team to focus on more strategic aspects of the migration process.
+- **Reliability**: Provides a reliable way to manage data during migration, ensuring that both the source and target systems remain in sync and up-to-date.
