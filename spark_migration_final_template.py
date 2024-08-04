@@ -444,6 +444,22 @@ def transform(oracle_df):
 
  return transformed_df
 
+#Function to write to Mongo DB
+def load_to_mongo(transformed_df):
+    try:
+        start_time = time.time()
+        transformed_df.write.format("mongodb") \
+            .mode("append") \
+            .option("database", database) \
+            .option("collection", collection) \
+            .save()
+
+        mongo_num_rows = transformed_df.count()
+        logger.info(f"Number of rows written to Mongo Collection: {mongo_num_rows}")
+        logger.info(f"Data write completed in {time.time() - start_time} seconds")
+    except Exception as exc:
+        logger.error(f"Error writing to MongoDB: {exc}")
+        
 #Function to calcualte migration time
 def calculate_migration_time(start_time)
   end_time = datetime.now(pytz.utc)
