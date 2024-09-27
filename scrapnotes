@@ -1,0 +1,44 @@
+JIRA Story: Migrate Metadata from P8 to CDL
+Summary
+Migrate metadata from a P8 database to a CDL (MongoDB) database. This migration will involve analyzing, mapping, and transferring data while ensuring data integrity and accuracy.
+
+Acceptance Criteria
+Data Accuracy: All migrated data must match the source data in P8, including null values, different possible values, and counts.
+Mapping Completeness: A comprehensive mapping sheet must be created, detailing source and target column names, default values, required translations, and datatypes.
+Batch Table Functionality: A separate batch table must be created in the migration database for tracking and reconciliation purposes.
+Data Integrity: The migration process must maintain data integrity, ensuring no data loss or corruption.
+Error Handling: A robust error handling mechanism must be in place to identify and address any issues during the migration.
+Query Accuracy: Appropriate P8 queries must be developed to extract the required data for input to Apache Spark migration jobs. These queries should include a main query, a CustomerReferenceKey query, an ExternalReferenceKey query, and any other relevant key queries. The queries should be reviewed and run on the P8 database to ensure accurate results.
+Detailed Steps
+Data Analysis:
+
+Analyze the P8 metadata to identify the required columns for migration.
+Update the mapping sheet with source and target column names, default values, required translations, and datatypes.
+Gather facts about column data, including null values, all different possible values, and counts.
+Batch Table Creation:
+
+Create a separate batch table in the migration database for tracking and reconciliation purposes.
+Include necessary columns such as batch ID, record ID, source data, target data, status, and error messages.
+Query Development:
+
+Develop P8 queries to extract the required data for input to Apache Spark migration jobs.
+Include a main query, a CustomerReferenceKey query, an ExternalReferenceKey query, and any other relevant key queries.
+Review and run the queries on the P8 database to ensure accurate results.
+Data Migration:
+
+Develop a migration script or tool to extract data from P8 and load it into CDL.
+Ensure that the script handles data transformations, validations, and error handling as needed.
+Use the batch table to track the progress of the migration and identify any issues.
+Data Validation:
+
+Compare the migrated data in CDL with the source data in P8 to verify accuracy and completeness.
+Use the batch table to identify and resolve any discrepancies.
+Error Handling and Resolution:
+
+Implement a mechanism to capture and log errors that occur during the migration process.
+Investigate and resolve any errors or issues that arise.
+Additional Considerations
+Performance Optimization: Consider techniques to optimize the migration process, such as batching, indexing, and parallel processing.
+Data Security: Ensure that appropriate security measures are in place to protect sensitive data during the migration.
+Testing and Quality Assurance: Conduct thorough testing to validate the accuracy and completeness of the migrated data.
+By following these steps and adhering to the acceptance criteria, we can successfully migrate metadata from P8 to CDL while maintaining data integrity and accuracy.
