@@ -45,7 +45,11 @@ By following these steps and adhering to the acceptance criteria, we can success
 
 
 
-cp /hosting/products/jdk/jdk17/conf/security/java.security java.security.bak.$(date +%Y-%m-%dT%H:%M:%S)
+for version in 17.0 21.0; do cp /hosting/products/jdk/jdk$version/conf/security/java.security /hosting/products/jdk/jdk$version/conf/security/java.security.bak.$(date +%Y-%m-%d); done
 
-
+#JDK17
 sed -i '/^[^#]*jdk.tls.disabledAlgorithms=/ { :a; N; $!ba; s/\(jdk.tls.disabledAlgorithms=[^\n]*\\\n[^\n]*\)/\1, SHA1, SHA1withRSA, SHA1withDSA/ }' filename
+
+#JDK17 & #JDK21
+sed -i '/^[^#]*jdk.tls.disabledAlgorithms=/ { :a; N; $!ba; s/\(jdk.tls.disabledAlgorithms=[^\n]*\\\n[^\n]*\\*\n*[^\n]*\)/\1, SHA1, SHA1withRSA, SHA1withDSA/ }' filename
+
