@@ -1,0 +1,48 @@
+Subject: Successful Completion of Dark Release: Migration to MongoDB from Oracle Database
+
+Dear Team,
+I am pleased to share the successful completion of our data migration deployment from Oracle to MongoDB. This dark release involved an efficient migration of 2,354,758 records. I would like to acknowledge the Help from our DBAs and abc//def from the development team in achieving a smooth execution. Below is a summary of the key activities, performance metrics, and some interesting facts about this deployment.
+Key Activities Performed:
+Database Preparation and DBA Tasks:
+MongoDB DBA: Created new staging collection named FAASFS along with Indexes mimic to DASDAD collection. Thanks to fsdafd for helping us creating script and fadfsad for executing it. 
+Reviewed collection and indexes created. 
+Oracle DBA: Created Batch Table and Tuple table. Thanks to hfasf for helping us creating script and fasfds for executing it. 
+Reviewed all SQL queries and working fine. 
+Migration Execution:
+Batch Creation:
+Executed Batch job to create Batches. 
+Data Migration:
+Ran Migration to move the data from FileNet P8[Oracle DB] to CDL[Mongo DB]
+Reconciliation:
+Ran Reconciliation to validate the migration for all the batches. 
+Key Performance Metrics
+Overall Volume and Batch Information
+Total Records Migrated: 2,354,758
+Number of Batches Created: 48
+Batch Size: 50,000 records per batch (maximum)
+Time Taken for Each Phase
+Batch Creation Duration: 1 minute for all batches
+Average Migration Time per Batch: 30 seconds
+Total Migration Time: ~24 minutes for all 48 batches
+Average Reconciliation Time per Batch: 2 minutes
+Total Reconciliation Time: ~96 minutes for all 48 batches
+Resource Utilization
+Server Configuration: 8 CPUs, 32 GB RAM
+Dynamic Resource Allocation: Enabled
+Memory Utilization During Migration: 70%-80%
+CPU Utilization During Migration: 65%-75%
+Data Accuracy and Validation
+Data Integrity Checks: 100% records validated
+Reconciliation Method: Sample-based validation (0.5% of total records per batch)
+Data Validation Success Rate: 99.95%
+
+Strategic Recommendations for Improvement
+Investigate Batch Anomalies: A small number of batches (fewer than 5) took longer than expected for migration and reconciliation. It's important to review these cases to understand the root causes for the delays. These batches were excluded from the calculation of key performance metrics for this release.
+Schedule DBA Tasks in Advance: To avoid dependencies and ensure a smoother migration process, it's recommended to complete DBA tasks ahead of the migration. This approach will free up time and allow the team to focus solely on migration activities.
+Automate Pre-Migration Preparations: For tasks such as tuple imports or data synchronization, automate the process using scripting or programming. Keeping these tasks within the team’s control will reduce potential delays and improve efficiency.
+Integrate Enhanced Monitoring Tools: Implement real-time monitoring solutions like Dynatrace and Splunk before the November release to improve the visibility of system metrics and enable proactive management.
+Configuration Optimization for Next Release: Configuration tuning, such as adjusting spark.default.parallelism, spark.executor.memory, and spark.sql.shuffle.partitions, should be a focus area before the next migration effort to maximize performance.
+Performance Monitoring for Large Data Sets: Equip the team with tools to track system performance during high loads, particularly during the migration and reconciliation of large batches. Early detection of potential bottlenecks will help in mitigating issues promptly.
+Leverage Current Metrics for Future Optimization: Use the performance insights from this release to fine-tune configuration parameters and achieve greater efficiency in upcoming migration phases.
+
+This dark release migration demonstrated our team's ability to effectively migrate and validate large data sets within a short timeframe, setting the stage for future migrations. The next steps included here will allow us to optimize performance and resource usage further in the upcoming releases. 
