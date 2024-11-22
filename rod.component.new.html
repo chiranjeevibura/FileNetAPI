@@ -1,0 +1,63 @@
+<div class="container row">
+  <div class="col-3"></div>
+  <div class="col-6">
+    <h3 class="text-center mt-3 fw-bold">Environment Validator</h3>
+    <form class="mt-4">
+      <!-- Environment Selection -->
+      <div class="mb-3">
+        <label for="selectedEnv" class="form-label fw-bold">Environment</label>
+        <select class="form-select" name="environment" id="selectedEnv" [(ngModel)]="selectedEnv" [ngModelOptions]="{ standalone: true }">
+          <option *ngFor="let doc of selectedEnvToAdd" [value]="doc">{{ doc }}</option>
+        </select>
+      </div>
+
+      <!-- Service Selection -->
+      <div class="mb-3">
+        <label for="service" class="form-label fw-bold">Service:</label>
+        <select class="form-select" id="service" [(ngModel)]="selectedService" [ngModelOptions]="{ standalone: true }" (change)="generateServers(selectedService)">
+          <option *ngFor="let env of serviceNames" [value]="env">{{ env }}</option>
+        </select>
+      </div>
+
+      <!-- Server Selection -->
+      <div class="mb-3" *ngIf="servers">
+        <label for="servers" class="form-label fw-bold">Server:</label>
+        <select class="form-select" id="servers" [(ngModel)]="selectedServer" [ngModelOptions]="{ standalone: true }">
+          <option *ngFor="let server of servers" [value]="server.value">{{ server.label }}</option>
+        </select>
+      </div>
+
+      <!-- Check Status Button -->
+      <div class="text-center mb-3">
+        <button type="button" class="btn btn-primary me-4" (click)="checkServerStatus('Status')" [disabled]="!selectedServer">STATUS</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Server Status Table -->
+<div *ngIf="isServerStatusResponse && data?.length > 0" class="container row justify-content-center">
+  <div class="col-12">
+    <h5 class="fw-bolder">Grouped by Service Name:</h5>
+    <table class="table table-striped table-bordered table-hover">
+      <thead class="table-primary">
+        <tr>
+          <th scope="col">Server</th>
+          <th scope="col">Service</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let entry of data">
+          <tr>
+            <td>{{ entry.serverName }}</td>
+            <td>{{ entry.serviceName }}</td>
+            <td [ngClass]="{ 'bg-success': entry.serverStatus === 'UP', 'bg-danger': entry.serverStatus === 'DOWN' }">
+              {{ entry.serverStatus }}
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
