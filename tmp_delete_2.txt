@@ -1,35 +1,87 @@
-Here’s a refined list of tasks which can automate to ensure reliable migration while moving data from IBM FileNet P8 to CDL (MongoDB):
+Here’s a simplified yet powerful set of instructions to explain the process of pulling and processing the target data for management. The instructions are written for clarity and to ensure everyone, including non-technical stakeholders, understands what is being done and why.
 
-1. Collect P8 Metadata & Keys for Migration
-Automate extraction of metadata, keys, and other critical information for each migration batch.
-Ensure all necessary P8 metadata is captured for validation.
-2. Prepare Testing Template for Validation
-Create automated templates for validating each field and data value.
-Ensure that the template supports both manual and automated testing processes.
-3. Analyze Mapping Sheets
-Automate the identification of key factors in the mapping sheets that can impact business logic.
-Flag critical fields that require special attention during validation.
-4. P8 Data-Side Validation
-Metadata Not Requiring Translation: Automate the validation of metadata fields that do not require translation.
-Test Coverage for Unique Fields and Values: Automatically validate all unique fields and values to ensure they are covered in testing.
-Metadata Requiring Translation: Automate the identification and validation of metadata fields that need translation.
-Test Coverage for Translated Fields: Ensure all fields that were part of the translation are covered in testing.
-5. MongoDB New Fields Validation
-Field Appearance: Automate the verification that all required fields are appearing on the target MongoDB datasource.
-Data Types: Automate checks for correct data types in MongoDB after migration.
-Null/Default/Mandatory Values: Verify that all null, default, and mandatory values are correctly updated in MongoDB.
-6. Content Path Decryption Validation
-Automate the verification that the actual content path encrypted in the P8 blob is decrypted and appears correctly as a clear text path in MongoDB.
-7. Constant Value Stamping on MongoDB
-Ensure that all constant values stamped on MongoDB are in line with LOB-specific requirements.
-Automate checks for these constant values in MongoDB after migration.
-8. Functional Testing
-New Functionalities in CDL: Automate testing to confirm that new functionalities on the CDL side are applicable to the migrated data.
-Comparison between Migrated vs. Created Services: Automate the comparison between migrated data and newly created data to ensure consistency and correctness in MongoDB.
-9. Post-Migration Data Quality Checks
-Automate checks for data integrity after migration to ensure no data loss or corruption.
-Implement periodic comparison between source (P8) and target (MongoDB) to ensure continuous alignment.
-10. Report Generation
-Automate the generation of reports for migration progress, issues, and validation results.
-Provide real-time feedback to stakeholders during migration.
+---
 
+### **Instructions to Pull Target Data**
+
+#### **Objective:**
+The goal of this process is to reconcile and extract relevant data from two different databases (P8 and Teradata) and prepare a unified, meaningful dataset for management to make informed decisions. 
+
+---
+
+### **Step-by-Step Explanation**
+
+#### **Step 1: Read Data from P8 Database**
+- We start by pulling **Application Reference Numbers (APP_REF_NO)** from the P8 database.  
+- This list serves as the foundation to identify which applications are under review or reconciliation.
+- **Why:** This ensures we are working with a known and relevant set of records for our analysis.
+
+---
+
+#### **Step 2: Read Data from Teradata Database (First Extraction)**
+- Next, we extract data from the first Teradata table.  
+- This includes:
+  - **APP_REF_NO**: Linking applications with P8.
+  - **Product Account Numbers (PROD_ACCT_NO)**: Identifiers for individual accounts.
+  - **Product Code (PROD_CD)**: Specifically filtering for "CC" (Consumer Credit).  
+- **Why:** This gives us a list of consumer accounts associated with the applications in P8, which is key for further reconciliation.
+
+---
+
+#### **Step 3: Join Data from P8 and Teradata**
+- We combine the data from Step 1 (P8) and Step 2 (Teradata) by matching **APP_REF_NO**.
+- This creates a unified view of application and account information, stored in a new dataset.  
+- **What Happens:** At this point:
+  - Only records present in both databases are retained (inner join).  
+  - This ensures data accuracy and removes any irrelevant or mismatched records.
+
+---
+
+#### **Step 4: Read Additional Data from Teradata (Second Extraction)**
+- We pull additional data from a second Teradata table, focusing on account closure and financial status.  
+- This includes:
+  - **PROD_ACCT_NO**: Account numbers for linking.
+  - **Closure Dates (STATC_CLOSED_MAINT_DT)**: Identifying when accounts were closed.
+  - **Legal Codes (STATC_LEGAL_CD)**: Regulatory information.
+  - **Balances (CCL_BAL_AM, STMT_CUR_BAL_AM)**: Financial indicators for zero balance.  
+- Filters are applied to ensure:
+  - Accounts are closed.
+  - Legal codes are present.
+  - Balances are zero.
+  - Closure dates are valid (excluding default values like `0001-01-01`).  
+- **Why:** This ensures we’re focusing only on relevant and eligible accounts for reporting.
+
+---
+
+#### **Step 5: Join the Unified Data with Account Closure Data**
+- We join the unified dataset from Step 3 with the closure and financial data from Step 4 on **PROD_ACCT_NO**.
+- **What Happens:**  
+  - This merge ensures that only accounts meeting all closure and financial criteria are included in the final dataset.  
+  - Any accounts or applications that don’t meet the criteria are automatically excluded.
+
+---
+
+#### **Step 6: Write the Final Dataset to the Target Database**
+- The final dataset is saved into the Oracle database in a table called **FINAL_TABLE**.  
+- This table provides a complete and validated view of:
+  - Applications.
+  - Linked accounts.
+  - Closure dates.
+  - Legal compliance.
+  - Financial status.
+- **Why:** This creates a single source of truth for management to analyze and make decisions.
+
+---
+
+### **Benefits of the Process**
+1. **Data Accuracy:** By filtering and joining multiple datasets, we ensure only the most relevant and valid data is included.
+2. **Automation:** The entire process is automated using PySpark, ensuring efficiency and reducing manual errors.
+3. **Comprehensive Insights:** The final dataset provides management with a clear view of consumer credit accounts, including their status and compliance details.
+4. **Scalability:** The process is designed to handle large volumes of data across multiple systems.
+
+---
+
+### **Conclusion**
+This process enables us to consolidate and reconcile critical data from different systems, ensuring management has access to accurate, actionable insights. It’s a step-by-step, systematic approach to ensure data integrity and compliance while focusing on the organization’s key priorities.
+
+Let me know if you'd like this refined further!
