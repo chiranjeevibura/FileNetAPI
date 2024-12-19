@@ -1,87 +1,40 @@
-Here’s a simplified yet powerful set of instructions to explain the process of pulling and processing the target data for management. The instructions are written for clarity and to ensure everyone, including non-technical stakeholders, understands what is being done and why.
+Subject: Follow-Up on Immigration Case – Request for Special Consideration
 
----
+Dear [Manager's Name],
 
-### **Instructions to Pull Target Data**
+I hope this message finds you well. As we’ve discussed previously, I deeply value the opportunities and support provided by the bank. Given the recent updates from USCIS and their implications for my career and family’s future, I wanted to revisit my immigration case to request HR/Immigration’s consideration as a special case under USCIS guidelines.
 
-#### **Objective:**
-The goal of this process is to reconcile and extract relevant data from two different databases (P8 and Teradata) and prepare a unified, meaningful dataset for management to make informed decisions. 
+Chronology of Events
+I-140 Approval During Rehire Discussions
 
----
+My I-140 was approved on 12/28/2022 during rehire discussions.
+To ensure continuity in the hiring process, I agreed to join on 2/2/2023, aware that only 30+ days of the 180-day priority date maintenance requirement had passed, instead of the full duration.
+Risk Taken with Assumptions of Support
 
-### **Step-by-Step Explanation**
+Joining earlier than ideal was a calculated decision based on the belief that the bank would provide strong support during the PERM process.
+Present Impact and Request
 
-#### **Step 1: Read Data from P8 Database**
-- We start by pulling **Application Reference Numbers (APP_REF_NO)** from the P8 database.  
-- This list serves as the foundation to identify which applications are under review or reconciliation.
-- **Why:** This ensures we are working with a known and relevant set of records for our analysis.
+Despite the risk I took, I am now at a juncture where regaining my priority date and cap exemption is critical for me and my family’s future stability. My request aligns strictly with USCIS guidelines and requires no exceptions beyond what is permissible.
+Relevant USCIS Guidelines
+Under the EB-1C classification, USCIS recognizes roles such as "functional managers" who manage an essential function of an organization without direct supervision of employees.
+Key highlights include:
 
----
+Managing a critical function within the organization.
+Operating at a senior level with discretion over day-to-day operations.
+The details of my role at the bank align with these criteria, emphasizing my qualifications for the multinational executive or manager classification.
 
-#### **Step 2: Read Data from Teradata Database (First Extraction)**
-- Next, we extract data from the first Teradata table.  
-- This includes:
-  - **APP_REF_NO**: Linking applications with P8.
-  - **Product Account Numbers (PROD_ACCT_NO)**: Identifiers for individual accounts.
-  - **Product Code (PROD_CD)**: Specifically filtering for "CC" (Consumer Credit).  
-- **Why:** This gives us a list of consumer accounts associated with the applications in P8, which is key for further reconciliation.
+Impact of Support
+Your assistance in addressing this matter will ensure:
 
----
+Retention of my priority date and cap exemption, securing my long-term immigration path.
+Stability for my family, enabling us to focus on contributing meaningfully to the bank’s goals without uncertainty.
+Attachments:
 
-#### **Step 3: Join Data from P8 and Teradata**
-- We combine the data from Step 1 (P8) and Step 2 (Teradata) by matching **APP_REF_NO**.
-- This creates a unified view of application and account information, stored in a new dataset.  
-- **What Happens:** At this point:
-  - Only records present in both databases are retained (inner join).  
-  - This ensures data accuracy and removes any irrelevant or mismatched records.
+I-140 Approval Snapshot (12/28/2022)
+Bank I-797 Snapshot (to highlight dates and transitions).
+I greatly appreciate the bank’s commitment to supporting employees and hope you can consider this request favorably. I am happy to discuss further or provide additional information to facilitate the process.
 
----
+Thank you for your time and understanding.
 
-#### **Step 4: Read Additional Data from Teradata (Second Extraction)**
-- We pull additional data from a second Teradata table, focusing on account closure and financial status.  
-- This includes:
-  - **PROD_ACCT_NO**: Account numbers for linking.
-  - **Closure Dates (STATC_CLOSED_MAINT_DT)**: Identifying when accounts were closed.
-  - **Legal Codes (STATC_LEGAL_CD)**: Regulatory information.
-  - **Balances (CCL_BAL_AM, STMT_CUR_BAL_AM)**: Financial indicators for zero balance.  
-- Filters are applied to ensure:
-  - Accounts are closed.
-  - Legal codes are present.
-  - Balances are zero.
-  - Closure dates are valid (excluding default values like `0001-01-01`).  
-- **Why:** This ensures we’re focusing only on relevant and eligible accounts for reporting.
-
----
-
-#### **Step 5: Join the Unified Data with Account Closure Data**
-- We join the unified dataset from Step 3 with the closure and financial data from Step 4 on **PROD_ACCT_NO**.
-- **What Happens:**  
-  - This merge ensures that only accounts meeting all closure and financial criteria are included in the final dataset.  
-  - Any accounts or applications that don’t meet the criteria are automatically excluded.
-
----
-
-#### **Step 6: Write the Final Dataset to the Target Database**
-- The final dataset is saved into the Oracle database in a table called **FINAL_TABLE**.  
-- This table provides a complete and validated view of:
-  - Applications.
-  - Linked accounts.
-  - Closure dates.
-  - Legal compliance.
-  - Financial status.
-- **Why:** This creates a single source of truth for management to analyze and make decisions.
-
----
-
-### **Benefits of the Process**
-1. **Data Accuracy:** By filtering and joining multiple datasets, we ensure only the most relevant and valid data is included.
-2. **Automation:** The entire process is automated using PySpark, ensuring efficiency and reducing manual errors.
-3. **Comprehensive Insights:** The final dataset provides management with a clear view of consumer credit accounts, including their status and compliance details.
-4. **Scalability:** The process is designed to handle large volumes of data across multiple systems.
-
----
-
-### **Conclusion**
-This process enables us to consolidate and reconcile critical data from different systems, ensuring management has access to accurate, actionable insights. It’s a step-by-step, systematic approach to ensure data integrity and compliance while focusing on the organization’s key priorities.
-
-Let me know if you'd like this refined further!
+Best regards,
+Chiranjeevi Bura
