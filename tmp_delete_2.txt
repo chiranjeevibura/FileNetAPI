@@ -1,40 +1,15 @@
-Subject: Follow-Up on Immigration Case – Request for Special Consideration
-
-Dear [Manager's Name],
-
-I hope this message finds you well. As we’ve discussed previously, I deeply value the opportunities and support provided by the bank. Given the recent updates from USCIS and their implications for my career and family’s future, I wanted to revisit my immigration case to request HR/Immigration’s consideration as a special case under USCIS guidelines.
-
-Chronology of Events
-I-140 Approval During Rehire Discussions
-
-My I-140 was approved on 12/28/2022 during rehire discussions.
-To ensure continuity in the hiring process, I agreed to join on 2/2/2023, aware that only 30+ days of the 180-day priority date maintenance requirement had passed, instead of the full duration.
-Risk Taken with Assumptions of Support
-
-Joining earlier than ideal was a calculated decision based on the belief that the bank would provide strong support during the PERM process.
-Present Impact and Request
-
-Despite the risk I took, I am now at a juncture where regaining my priority date and cap exemption is critical for me and my family’s future stability. My request aligns strictly with USCIS guidelines and requires no exceptions beyond what is permissible.
-Relevant USCIS Guidelines
-Under the EB-1C classification, USCIS recognizes roles such as "functional managers" who manage an essential function of an organization without direct supervision of employees.
-Key highlights include:
-
-Managing a critical function within the organization.
-Operating at a senior level with discretion over day-to-day operations.
-The details of my role at the bank align with these criteria, emphasizing my qualifications for the multinational executive or manager classification.
-
-Impact of Support
-Your assistance in addressing this matter will ensure:
-
-Retention of my priority date and cap exemption, securing my long-term immigration path.
-Stability for my family, enabling us to focus on contributing meaningfully to the bank’s goals without uncertainty.
-Attachments:
-
-I-140 Approval Snapshot (12/28/2022)
-Bank I-797 Snapshot (to highlight dates and transitions).
-I greatly appreciate the bank’s commitment to supporting employees and hope you can consider this request favorably. I am happy to discuss further or provide additional information to facilitate the process.
-
-Thank you for your time and understanding.
-
-Best regards,
-Chiranjeevi Bura
+SELECT PROD_ACCT_NO, STATC_CLOSED_MAINT_DT, PROD_CD, STATC_LEGAL_CD, CCL_BAL_AM, STMT_CUR_BAL_AM
+FROM (
+    SELECT PROD_ACCT_NO, STATC_CLOSED_MAINT_DT, PROD_CD, STATC_LEGAL_CD, CCL_BAL_AM, STMT_CUR_BAL_AM,
+           ROW_NUMBER() OVER (
+               PARTITION BY PROD_ACCT_NO 
+               ORDER BY STATC_CLOSED_MAINT_DT DESC
+           ) AS row_num
+    FROM TERADATA_TABLE_2
+    WHERE PROD_CD = 'CC' 
+      AND STATC_LEGAL_CD IS NOT NULL 
+      AND CCL_BAL_AM = 0 
+      AND STMT_CUR_BAL_AM = 0 
+      AND STATC_CLOSED_MAINT_DT <> '0001-01-01'
+) t
+WHERE row_num = 1;
