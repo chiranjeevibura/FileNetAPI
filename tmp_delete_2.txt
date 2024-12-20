@@ -16,7 +16,8 @@ WHERE row_num = 1;
 
 
 **Key Responsibilities:**
-
+Lead ECM migrations (e.g., Documentum to IBM FileNet), data center consolidation, and cloud adoption with minimal downtime.
+Develop automation and DevOps pipelines (Ansible, Jenkins) and optimize monitoring with tools like Dynatrace and AppDynamics.
 - Lead and oversee enterprise-wide content and document management functions within the banking domain, ensuring alignment with organizational goals and compliance requirements.  
 - Direct critical projects and initiatives to enhance operational efficiency, ensure regulatory adherence, and support strategic enterprise objectives.  
 - Exercise authority and discretion in managing day-to-day operations, collaborating with senior leadership to define and implement strategies for continuous improvement and innovation.  
