@@ -13,3 +13,10 @@ FROM (
       AND STATC_CLOSED_MAINT_DT <> '0001-01-01'
 ) t
 WHERE row_num = 1;
+
+
+**Key Responsibilities:**
+
+- Lead and oversee enterprise-wide content and document management functions within the banking domain, ensuring alignment with organizational goals and compliance requirements.  
+- Direct critical projects and initiatives to enhance operational efficiency, ensure regulatory adherence, and support strategic enterprise objectives.  
+- Exercise authority and discretion in managing day-to-day operations, collaborating with senior leadership to define and implement strategies for continuous improvement and innovation.  
