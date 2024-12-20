@@ -15,9 +15,19 @@ FROM (
 WHERE row_num = 1;
 
 
-**Key Responsibilities:**
-Lead ECM migrations (e.g., Documentum to IBM FileNet), data center consolidation, and cloud adoption with minimal downtime.
-Develop automation and DevOps pipelines (Ansible, Jenkins) and optimize monitoring with tools like Dynatrace and AppDynamics.
-- Lead and oversee enterprise-wide content and document management functions within the banking domain, ensuring alignment with organizational goals and compliance requirements.  
-- Direct critical projects and initiatives to enhance operational efficiency, ensure regulatory adherence, and support strategic enterprise objectives.  
-- Exercise authority and discretion in managing day-to-day operations, collaborating with senior leadership to define and implement strategies for continuous improvement and innovation.  
+**Subject:** Thank You and Warm Holiday Wishes  
+
+Dear [Manager's Name],  
+
+I hope this message finds you well.  
+
+As the year comes to a close, I wanted to take a moment to thank you sincerely for the opportunity to be part of your team this year. It has been a privilege to contribute under your leadership, particularly in focusing on my favorite areas of technology—AI/ML, Spark, Python, and automation. Working on initiatives like the CDL Validator has been both exciting and rewarding, and I truly appreciate the trust and encouragement you've shown me.  
+
+I’ve genuinely enjoyed collaborating with the team and learning from your guidance. Your leadership has been inspiring, and I am looking forward to the new year with optimism, eager to contribute further to the team’s success.  
+
+Wishing you and your family a joyful holiday season and a prosperous year ahead. May the coming year bring great achievements and continued success for you and the team.  
+
+Happy Holidays!  
+
+Best regards,  
+Chiranjeevi Bura  
