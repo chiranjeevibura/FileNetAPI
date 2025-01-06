@@ -1,0 +1,108 @@
+Sure! Here’s an updated Example Inputs and Outputs section with more detailed steps, including how an LLM is used for embedding generation, storing vector embeddings in MongoDB, and utilizing those embeddings during the search and DocuChat process:
+
+Example Inputs and Outputs
+
+1. Document Ingestion
+
+Input:
+	•	A PDF document titled “Invoice_ABC123.pdf”, containing an invoice for ABC Corp with details like invoice number, total amount, and due date.
+
+Process:
+	1.	The PDF document is converted to text using an OCR or PDF parser (e.g., PyPDF2 or Tesseract).
+	2.	Metadata such as file name, client, and document type is extracted.
+	3.	The raw content and metadata are stored in MongoDB.
+
+Output:
+	•	Document ID: doc_001
+	•	Metadata: { "file_name": "Invoice_ABC123.pdf", "client": "ABC Corp", "type": "invoice" }
+
+2. Classification & Data Extraction
+
+Input:
+	•	Document ID: doc_001
+
+Process:
+	1.	The extracted text content is fed into an LLM-based classification model (fine-tuned or pre-trained on enterprise document types).
+	2.	The LLM classifies the document as an “invoice”.
+	3.	Using NLP techniques (named entity recognition, regex patterns, or prompt-based extraction via an LLM), key information like invoice number, total amount, and due date is extracted.
+	4.	The classification label and extracted data are updated in the MongoDB record.
+
+Output:
+	•	Classification: "invoice"
+	•	Extracted Data:
+
+{
+  "invoice_number": "INV-12345",
+  "total_amount": "$500",
+  "due_date": "2025-01-15"
+}
+
+3. Embedding Generation and Vector Storage
+
+Input:
+	•	Text content of the document: "This invoice INV-12345 for ABC Corp has a total amount of $500 due by 2025-01-15."
+
+Process:
+	1.	The document text is passed through a pre-trained LLM (e.g., OpenAI’s GPT or a local transformer model) to generate a vector embedding representing the semantic meaning of the document.
+	2.	The generated embedding is a high-dimensional vector (e.g., a 768-dimensional vector from a BERT-based model).
+	3.	The vector embedding is stored in MongoDB alongside the document metadata for later similarity-based searches.
+
+Output:
+	•	Stored vector embedding: [0.12, 0.45, 0.89, ..., 0.34] (768-dimensional vector)
+
+4. Search
+
+Input:
+	•	Query: "Find all invoices for ABC Corp"
+
+Process:
+	1.	The query is passed through the same LLM embedding model to generate a query vector.
+	2.	A similarity search is performed by comparing the query vector with stored document embeddings in MongoDB using cosine similarity or Euclidean distance.
+	3.	The documents with the highest similarity scores are retrieved.
+
+Output:
+	•	Retrieved Documents:
+
+[
+  {
+    "doc_id": "doc_001",
+    "file_name": "Invoice_ABC123.pdf",
+    "client": "ABC Corp",
+    "type": "invoice",
+    "total_amount": "$500",
+    "due_date": "2025-01-15"
+  }
+]
+
+5. DocuChat – GenAI-Based Q&A
+
+Input:
+	•	User Question: "What is the total amount on the invoice for ABC Corp?"
+
+Process:
+	1.	The user’s question is passed through the LLM embedding model to generate a query vector.
+	2.	A similarity search is conducted to retrieve the most relevant documents based on vector embeddings.
+	3.	The retrieved document content is combined into a context.
+	4.	The context and user question are passed as input to a GenAI model (e.g., GPT) using a prompt like:
+
+Context: This invoice INV-12345 for ABC Corp has a total amount of $500 due by 2025-01-15.
+
+Question: What is the total amount on the invoice for ABC Corp?
+
+Answer:
+
+
+	5.	The GenAI model generates a natural language answer based on the context.
+
+Output:
+	•	Generated Answer: "The total amount on the invoice for ABC Corp is $500."
+
+Summary of Steps Involved
+	1.	Document Ingestion: The document is parsed and stored in MongoDB.
+	2.	Classification & Extraction: An LLM classifies the document and extracts key data points.
+	3.	Embedding Generation: The document content is converted into a high-dimensional vector embedding using an LLM.
+	4.	Vector Storage: The embedding is stored in MongoDB for efficient similarity-based retrieval.
+	5.	Search: A similarity search retrieves documents based on vector embeddings.
+	6.	DocuChat: The retrieved documents are used as context for an LLM-powered Q&A system, generating precise answers to user questions.
+
+Would you like me to help you implement this pipeline end-to-end, including embedding generation, MongoDB integration, and a simple API for search and Q&A?
