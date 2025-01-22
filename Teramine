@@ -1,0 +1,29 @@
+WITH FilteredData AS (
+    -- Step 1: Exclude accounts where any associated access medium has a non-zero balance
+    SELECT DISTINCT PROD_ACCT_NO 
+    FROM CARD_CNS_US_AOCI_MED_CHE
+    WHERE CCL_BAL_AM <> 0 OR STMT_CUR_OS_BAL_AM <> 0
+), 
+ValidData AS (
+    -- Step 2: Filter out those product accounts and keep relevant data
+    SELECT 
+        PROD_ACCT_NO, 
+        ACCESS_MEDIUM_NO, 
+        STATC_CLOSED_MAINT_DT, 
+        STATC_LEGAL_CD, 
+        CCL_BAL_AM, 
+        STMT_CUR_OS_BAL_AM,
+        ROW_NUMBER() OVER (
+            PARTITION BY PROD_ACCT_NO 
+            ORDER BY STATC_CLOSED_MAINT_DT DESC
+        ) AS rn
+    FROM CARD_CNS_US_AOCI_MED_CHE
+    WHERE 
+        STATC_LEGAL_CD = '5' 
+        AND STATC_CLOSED_MAINT_DT < DATE '0001-01-01'
+        AND PROD_ACCT_NO NOT IN (SELECT PROD_ACCT_NO FROM FilteredData)
+)
+-- Step 3: Select the most recent closure date for each product account
+SELECT DISTINCT PROD_ACCT_NO, ACCESS_MEDIUM_NO, STATC_CLOSED_MAINT_DT
+FROM ValidData
+WHERE rn = 1;
