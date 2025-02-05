@@ -1,0 +1,10 @@
+[
+  { "$match": { "status": "locked" } },
+  { "$group": { 
+      "_id": { "$dateToString": { "format": "%Y-%m-%d", "date": "$clusterTimestamp" } }, 
+      "total": { "$sum": 1 }, 
+      "documentIds": { "$push": "$_id" } 
+    } 
+  },
+  { "$sort": { "_id": 1 } }
+]
