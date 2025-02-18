@@ -1,0 +1,35 @@
+<button 
+  *ngIf="selectedRadioInput == radioQueryCollection" 
+  type="button" 
+  class="btn btn-primary"
+  (click)="promptSecurityCode()">
+  Update
+</button>
+
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-your-component',
+  templateUrl: './your-component.component.html',
+  styleUrls: ['./your-component.component.css']
+})
+export class YourComponent {
+  
+  securityCode: string = '123456'; // Predefined security code
+
+  promptSecurityCode() {
+    const enteredCode = prompt('Enter Security Code to proceed with update:');
+    
+    if (enteredCode === this.securityCode) {
+      this.checkEventStatus('Update');
+    } else {
+      alert('Invalid Security Code! Update action cancelled.');
+    }
+  }
+
+  checkEventStatus(action: string) {
+    // Your existing update logic goes here
+    console.log(`Proceeding with ${action}`);
+  }
+}
