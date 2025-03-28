@@ -1,0 +1,28 @@
+Here’s a smart, concise, and professional email summarizing the plan and highlighting the risks:
+
+⸻
+
+Subject: FileNet P8 & ICN Upgrade Plan – Sequencing and Risk Note
+
+Hi Team,
+
+As part of aligning IBM Content Navigator (ICN) compatibility with FileNet P8 5.6, here’s the proposed sequence for environments:
+
+Planned Approach:
+	•	Rollback CE1 LLE to 5.5.10 (to align with current Prod version)
+	•	Upgrade CE1 LLE to 5.5.12
+	•	CEZ PROD upgrade to 5.5.12 – April
+	•	CEL, CES PROD to 5.5.12 – May
+	•	CE4 PROD to 5.5.12 – June
+	•	ICN Upgrade in LLE to 3.1.x
+	•	ICN PROD Upgrade to 3.1.x – July Infra release
+	•	CE1 PROD Upgrade to 5.6 – July
+	•	CE4 PROD Upgrade to 5.6 – September Infra release
+
+Risk Note:
+Rolling back CE1 LLE from 5.6 to 5.5.10 introduces a high-risk path, as FileNet CE downgrade is not officially supported by IBM. This could lead to metadata inconsistencies, schema mismatches, and unsupported state, impacting stability and supportability. We recommend validating this rollback thoroughly or evaluating alternative sequencing to avoid downgrade.
+
+Please share your inputs or concerns before we proceed.
+
+Best regards,
+Chiranjeevi
