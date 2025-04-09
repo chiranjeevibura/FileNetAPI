@@ -1,0 +1,42 @@
+Technical Incident Brief: Cipher Mismatch Blocking UUM Authentication Integration
+Problem Statement
+After switching from development to production, the SharePoint-integrated application failed during the WSUUM SOAP-based token request, blocking record declaration and retrieval. The issue did not occur in DEV and no recent code changes were made in this area.
+
+Observed Behavior
+WSUUM service calls failed only from the PROD server.
+
+All outbound requests (to both WSUUM-DEV and WSUUM-PROD) failed from PROD.
+
+Requests from DEV to DEV succeeded, confirming valid logic and endpoint behavior.
+
+Direct SOAP calls via curl worked, but the .NET application in PROD failed.
+
+Initial Hypotheses
+Investigations explored:
+
+Output caching
+
+Configuration parsing
+
+Runtime framework behavior
+
+WCF vs ASMX interoperability
+
+All were ruled out through controlled cross-environment testing.
+
+Root Cause
+The failure stemmed from a malformed encrypted configuration block in <secureAppSettings>:
+
+The encrypted credentials were not re-encrypted in PROD, leading to cipher mismatch during decryption.
+
+Though the encrypted XML was structurally valid, it could not be decrypted using the PROD machine's key, silently causing downstream token generation to fail.
+
+Resolution
+The secure config section was re-encrypted on the PROD server using aspnet_regiis -pe.
+
+No code changes were required.
+
+Token acquisition began working immediately.
+
+Diagnostic logging was added to surface future decryption failures.
+
