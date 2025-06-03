@@ -1,0 +1,34 @@
+✅ Contract Number Migration Rules – Summary Table
+Rule No.	Rule Description	Example (Before)	CDL Contract Number (After)
+1	If numeric and 13 digits, remove first 3 and last 3 digits. If all 0s or all 9s → invalid	9999999999999, 6000000000000	0000000000000
+2	If numeric < 13 digits, mark invalid	104457, 0080091255	0000000000000
+3	If numeric > 13 digits, mark invalid	0000000000000000	0000000000000
+4	Preserve spaces in alpha-numeric contract numbers	10BMC 9331	10BMC 9331
+5	If contains /, remove from forward slash to end	ASYS021387/1	ASYS021387
+6	If contains hyphen (-), remove from first hyphen to end
+& check resulting type:
+– If alpha-numeric → save
+– If 13-digit numeric → save
+– Else → invalid	ASYS021624-1
+9330200377001-5	ASYS021624
+9330200377001
+7	If alpha-numeric and contains hyphens at 4th and 12th positions, remove hyphens and check:
+– If result is 13-digit numeric & not all 0s → save
+– Else → invalid	899-3136201-001
+899-31301-001	8993136201001
+0000000000000
+8	If starts with . and 13 digits → save as contract	.0021634960609	.0021634960609
+9	If no contract number in CISTR DB → assign non-contract 0000000000000	(Blank or missing)	0000000000000
+10	All unmatched values (junk/dirty data) → assign non-contract 0000000000000	ALFA600000000000
+ASYS_AFL000000000	0000000000000
+
+✅ Additional Preserved Examples from the List
+These are valid alpha-numeric entries and are preserved as-is:
+
+Original Contract Number	CDL Contract Number
+GVFLKEY	GVFLKEY
+Wind Holdings L	Wind Holdings L
+TSYS004136	TSYS004136
+ROBERT BROUSSEIT	ROBERT BROUSSEIT
+IBM_HK	IBM_HK
+MASTER	MASTER
