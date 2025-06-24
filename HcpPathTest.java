@@ -88,68 +88,40 @@ public class HCPPath {
                 contentElements[i] = readInt(in);
             }
 
-            try {
-                byte[] bytebuf = new byte[64];
-                in.read(bytebuf);
-                ByteBuffer byteBuffer = ByteBuffer.wrap(bytebuf);
-                byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
-                clipId = byteBuffer.asCharBuffer().toString().trim();
-                fcpType = 1;
-            } catch (IOException e) {
-                System.out.println("Exception thrown trying to extract C-ClipID: " + e.getLocalizedMessage());
-            }
+            ByteBuffer bb = ByteBuffer.wrap(deviceId);
+            UUID uuid = new UUID(bb.getLong(), bb.getLong());
+            deviceGUID = ConvertUUIToGUID(uuid.toString());
+            System.out.println("deviceGUID:"+ deviceGUID);    
+                
+            ByteBuffer bb1 = ByteBuffer.wrap(contentId);
+            UUID contentuuid = new UUID(bb1.getLong(), bb1.getLong());
+            contentGUID = ConvertUUIToGUID(contentuuid.toString());
+            System.out.println("contentGUID:"+ contentGUID);  
+            StringBuffer location = new StringBuffer(100);
+            location.append("[");
+
+            int first_depth=0;
+            for (int i=0; i<8; i++)
+                {
+                    if(i=0) {
+                      first_depth = fileLocation[i];
+                    }
+                     if(i<first_depth && i!=0) {
+                         location.append(fileLocation[i])
+                         locationFN+="/FN"+fileLocation[i];
+                    }                   
+                }
+            location.append("]");
+            System.out.println("locationFN_HCP:"+ locationFN); 
+            fcpType = 7;
         }
-
-        if (provider == 2) {
-            try {
-                fcpType = 0;
-                int docid = readInt(in);
-                int ceCount = readInt(in);
-                fcpType = 2;
-            } catch (Exception localException) {
-                // Log or handle error
-            }
-        }
-
-        if (provider == 3) {
-            fcpType = 0;
-            byte[] storeId = readId(in);
-            byte[] deviceId = readId(in);
-            fcpType = 3;
-        }
-    }
-
-    public static short readShort(InputStream stream) throws IOException {
-        int b1 = stream.read();
-        int b2 = stream.read();
-        return (short) ((b2 & 0xFF) << 8 | b1 & 0xFF);
-    }
-
-    public static int readInt(InputStream stream) throws IOException {
-        int b1 = stream.read();
-        int b2 = stream.read();
-        int b3 = stream.read();
-        int b4 = stream.read();
-        return (b4 & 0xFF) << 24 | (b3 & 0xFF) << 16 | (b2 & 0xFF) << 8 | (b1 & 0xFF);
-    }
-
-    public static long readLong(InputStream stream) throws IOException {
-        long result = 0;
-        for (int i = 0; i < 8; i++) {
-            result |= ((long) stream.read() & 0xFF) << (8 * i);
-        }
-        return result;
-    }
-
-    public static byte[] readId(InputStream stream) throws IOException {
-        byte[] id = new byte[ID_TYPE];
-        stream.read(id);
-        return id;
-    }
-}
-
-
-bytebuf.order(ByteOrder.LITTLE_ENDIAN);
+    if (provider == 1) {
+    try 
+    {
+        fcpType = 0;
+        byte[] bytebuf = new byte[64];
+        in.read(bytebuf); 
+        bytebuf.order(ByteOrder.LITTLE_ENDIAN);
         clipId = bytebuf.asCharBuffer().toString().trim();
         fcpType = 1;
     }
